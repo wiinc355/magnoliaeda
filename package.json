@@ -1,0 +1,16 @@
+{
+  "name": "magnoliaeda",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Workspace runner for Magnolia EDA client and server",
+  "scripts": {
+    "client:start": "npm --prefix client start",
+    "server:dev": "npm --prefix server run dev",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:start\"",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
