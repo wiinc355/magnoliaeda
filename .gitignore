@@ -6,15 +6,32 @@
 node_modules/
 client/node_modules/
 server/node_modules/
+MainSite/node_modules/
+EcodevSite/node_modules/
 
 # Build output
 client/build/
+MainSite/build/
+EcodevSite/build/
 
 # Env files
 .env
 .env.local
 client/.env.local
 server/.env.local
+server/.env
+MainSite/.env
+EcodevSite/.env
+
+# SQLite database
+server/data/
+*.db
+*.db-wal
+*.db-shm
+
+# Local Postgres dev cluster
+server/.local-pg/
+server/.local-pg*.log
 
 # Logs
 npm-debug.log*

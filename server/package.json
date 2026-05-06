@@ -5,16 +5,23 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "migrate:auth": "psql \"$DATABASE_URL\" -f db/migrations/001_auth.sql"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@azure/msal-node": "^3.8.0",
     "better-sqlite3": "^12.8.0",
+    "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express-rate-limit": "^7.5.1",
+    "express-session": "^1.18.0",
+    "express": "^4.18.2",
+    "helmet": "^8.0.0",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

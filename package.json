@@ -4,10 +4,13 @@
   "version": "1.0.0",
   "description": "Workspace runner for Magnolia EDA client and server",
   "scripts": {
-    "client:start": "npm --prefix client start",
+    "MainSite:start": "npm --prefix MainSite start",
+    "EcodevSite:start": "npm --prefix EcodevSite start",
     "server:dev": "npm --prefix server run dev",
-    "dev": "concurrently \"npm run server:dev\" \"npm run client:start\"",
-    "build": "npm --prefix client run build",
+    "dev": "concurrently \"npm run server:dev\" \"npm run MainSite:start\"",
+    "dev:all": "concurrently \"npm run server:dev\" \"npm run MainSite:start\" \"npm run EcodevSite:start\"",
+    "sync:styles": "TARBALL=$(cd shared-site-styles && npm pack --silent) && npm --prefix MainSite install \"./shared-site-styles/$TARBALL\" && npm --prefix EcodevSite install \"./shared-site-styles/$TARBALL\"",
+    "build": "npm --prefix MainSite run build && npm --prefix EcodevSite run build",
     "start": "npm --prefix server run start"
   },
   "devDependencies": {
