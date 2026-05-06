@@ -11,6 +11,8 @@ import RoleGate from './auth/RoleGate';
 
 import CityHome from './pages/CityHome';
 import CalendarPage from './pages/CalendarPage';
+import EventsPage from './pages/EventsPage';
+import AnnouncementsPage from './pages/AnnouncementsPage';
 import ContentPage from './pages/ContentPage';
 import SearchPage from './pages/SearchPage';
 import PoliceDept from './pages/PoliceDept';
@@ -115,6 +117,8 @@ function App() {
                 <Route path="/resource/solid-waste-recycling" element={<ContentPage pageKey="solidWaste" />} />
                 <Route path="/resource/permits-licenses" element={<ContentPage pageKey="permitsLicenses" />} />
                 <Route path="/calendar" element={<CalendarPage />} />
+                <Route path="/events" element={<EventsPage />} />
+                <Route path="/announcements" element={<AnnouncementsPage />} />
                 <Route path="/alerts/enotify" element={<ContentPage pageKey="enotify" />} />
                 <Route path="/how-do-i/contact-us" element={<ContentPage pageKey="contactUs" />} />
                 <Route path="/search" element={<SearchPage />} />

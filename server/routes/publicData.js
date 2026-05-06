@@ -31,7 +31,8 @@ router.get('/events', (req, res) => {
     const now = localNow();
     let sql = `SELECT id, title, description, location, event_date, end_date,
                       start_time, end_time, category,
-                      contact_name, contact_phone, contact_email
+                      contact_name, contact_phone, contact_email,
+                      attachment_url, attachment_name
                FROM events
                WHERE is_active = 1
                  AND (publish_at IS NULL OR publish_at <= ?)
@@ -53,7 +54,8 @@ router.get('/announcements', (req, res) => {
   try {
     const now = localNow();
     const rows = db.prepare(
-      `SELECT id, title, body, category
+      `SELECT id, title, body, category, published_at, created_at,
+              attachment_url, attachment_name
        FROM announcements
        WHERE is_active = 1
          AND (published_at IS NULL OR published_at <= ?)
