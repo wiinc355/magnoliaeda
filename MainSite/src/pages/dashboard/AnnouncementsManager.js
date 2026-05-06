@@ -121,6 +121,8 @@ export default function AnnouncementsManager() {
   const [sortCol, setSortCol]     = useState('created_at');
   const [sortDir, setSortDir]     = useState('desc');
   const [hiddenCols, setHiddenCols] = useState(new Set());
+  const [perPage, setPerPage]     = useState(10);
+  const [page, setPage]           = useState(1);
 
   function load() {
     setLoading(true);
@@ -182,6 +184,7 @@ export default function AnnouncementsManager() {
   function handleSort(col) {
     if (sortCol === col) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
     else { setSortCol(col); setSortDir('asc'); }
+    setPage(1);
   }
 
   const displayed = useMemo(() => {
@@ -197,6 +200,10 @@ export default function AnnouncementsManager() {
     });
     return list;
   }, [items, search, sortCol, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(displayed.length / perPage));
+  const safePage   = Math.min(page, totalPages);
+  const pageItems  = displayed.slice((safePage - 1) * perPage, safePage * perPage);
 
   const visCols = ALL_COLS.filter((c) => c.always || !hiddenCols.has(c.key));
 
@@ -330,8 +337,17 @@ export default function AnnouncementsManager() {
               className="dash-search"
               placeholder="Search by title…"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             />
+            <label className="dash-per-page-label">
+              Show&nbsp;
+              <select className="dash-per-page-select" value={perPage}
+                onChange={(e) => { setPerPage(Number(e.target.value)); setPage(1); }}>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </select>
+            </label>
             <ColMenu hiddenCols={hiddenCols} setHiddenCols={setHiddenCols} />
           </div>
           <div className="dash-table-wrap">
@@ -349,7 +365,7 @@ export default function AnnouncementsManager() {
                   <tr><td colSpan={visCols.length} className="dash-empty-cell">
                     {search ? 'No announcements match your search.' : 'No announcements yet.'}
                   </td></tr>
-                ) : displayed.map((item) => {
+                ) : pageItems.map((item) => {
                   const status = scheduleStatus(item);
                   return (
                     <tr key={item.id}>
@@ -391,6 +407,13 @@ export default function AnnouncementsManager() {
               </tbody>
             </table>
           </div>
+          {totalPages > 1 && (
+            <div className="dash-pagination">
+              <button className="dash-page-btn" onClick={() => setPage((p) => p - 1)} disabled={safePage === 1}>‹ Prev</button>
+              <span className="dash-page-info">{safePage} / {totalPages} &nbsp;·&nbsp; {displayed.length} total</span>
+              <button className="dash-page-btn" onClick={() => setPage((p) => p + 1)} disabled={safePage === totalPages}>Next ›</button>
+            </div>
+          )}
         </>
       )}
     </div>
