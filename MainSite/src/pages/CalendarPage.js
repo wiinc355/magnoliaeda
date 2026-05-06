@@ -579,7 +579,7 @@ export default function CalendarPage() {
 
   return (
     <div>
-      <PageBanner title="Events Calendar" images={[calendarBanner]} />
+      <PageBanner title="" images={[calendarBanner]} height={180} />
 
       <section className="cal-page">
         <div className="container">
