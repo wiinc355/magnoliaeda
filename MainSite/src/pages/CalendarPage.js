@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getPublicEvents } from '../api/cmsApi';
 import { PageBanner } from '../components/PageBanner';
 import calendarBanner from '../image/COM-Timepic-2.jpeg';
@@ -486,6 +487,22 @@ export default function CalendarPage() {
   const [listTab, setListTab]         = useState('upcoming');
   const [selectedCats, setSelectedCats] = useState(new Set());
 
+  const [headerHeight, setHeaderHeight] = useState(90);
+  const [searchQuery, setSearchQuery]   = useState('');
+  const routerNavigate = useNavigate();
+
+  useEffect(() => {
+    const header = document.querySelector('.municipal-header');
+    if (header) setHeaderHeight(header.offsetHeight);
+  }, []);
+
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (searchQuery.trim()) params.set('q', searchQuery.trim());
+    routerNavigate(`/search${params.toString() ? `?${params.toString()}` : ''}`);
+  }
+
   useEffect(() => {
     getPublicEvents()
       .then((data) => setAllEvents(Array.isArray(data) ? data : []))
@@ -580,6 +597,58 @@ export default function CalendarPage() {
   return (
     <div>
       <PageBanner title="" images={[calendarBanner]} height={180} />
+
+      {/* Sticky title + search bar — matches Police Department page style */}
+      <div style={{
+        position: 'sticky',
+        top: headerHeight,
+        zIndex: 1100,
+        background: '#0a4f90',
+        color: '#fff',
+        padding: '0.15rem 0',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+      }}>
+        <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', minWidth: 0 }}>
+          <div style={{ fontFamily: "'Bree Serif', serif", fontWeight: 700, fontSize: '25px', letterSpacing: '0.08em', textTransform: 'uppercase', minWidth: 0, flex: '0 1 auto' }}>
+            Events Calendar
+          </div>
+          <form onSubmit={handleSearchSubmit} style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flex: '0 1 440px', maxWidth: '100%', minWidth: 0 }}>
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="What can we help you find today?"
+              aria-label="Search site"
+              className="title-bar-search-input"
+              style={{
+                width: '100%',
+                border: '1px solid rgba(255,255,255,0.35)',
+                borderRadius: '999px',
+                padding: '0.45rem 0.8rem',
+                fontSize: '0.95rem',
+                color: '#12385c',
+                background: '#ffffff',
+                minWidth: 0,
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                border: 'none',
+                borderRadius: '999px',
+                padding: '0.45rem 0.9rem',
+                background: '#f2b21c',
+                color: '#082c4f',
+                fontWeight: 800,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+              }}
+            >
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
 
       <section className="cal-page">
         <div className="container">
