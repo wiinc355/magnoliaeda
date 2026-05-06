@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getPublicEvents } from '../api/cmsApi';
 import { PageBanner } from '../components/PageBanner';
+import calendarBanner from '../image/COM-Timepic-2.jpeg';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -22,9 +23,9 @@ const MONTH_NAMES = [
 ];
 const DAY_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const DAY_FULL  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const GRID_START = 6;   // 6 AM
-const GRID_END   = 22;  // 10 PM
-const HOUR_PX    = 64;  // px per hour
+const GRID_START = 6;
+const GRID_END   = 22;
+const HOUR_PX    = 64;
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -154,9 +155,118 @@ function EventModal({ ev, onClose }) {
   );
 }
 
+// ── Shared event list row ────────────────────────────────────────────────────
+
+function EventListRow({ ev, onPick }) {
+  const color = evColor(ev);
+  return (
+    <li className="cal-list-item-wrap">
+      <button type="button" className="cal-list-item" onClick={() => onPick(ev)}>
+        <div className="cal-list-top">
+          <span className="cal-list-dot" style={{ background: color }} />
+          <span className="cal-list-title">{ev.title}</span>
+        </div>
+        <div className="cal-list-details">
+          <span className="cal-list-date">{fmtLong(ev.event_date)}</span>
+          {ev.start_time && (
+            <span className="cal-list-time">
+              {fmt12(ev.start_time)}{ev.end_time ? ` – ${fmt12(ev.end_time)}` : ''}
+            </span>
+          )}
+        </div>
+        <div className="cal-list-footer">
+          <span className="cal-list-cat" style={{ color, borderColor: color }}>{ev.category}</span>
+          <span className="cal-list-more">View details ›</span>
+        </div>
+      </button>
+    </li>
+  );
+}
+
+// ── Category Dropdown ─────────────────────────────────────────────────────────
+
+function CategoryDropdown({ availCats, selectedCats, setSelectedCats }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    function handleOutside(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
+  }, []);
+
+  const allChecked   = selectedCats.size === 0;
+  const someChecked  = selectedCats.size > 0 && selectedCats.size < availCats.length;
+
+  function isChecked(cat) {
+    return selectedCats.size === 0 || selectedCats.has(cat);
+  }
+
+  function toggle(cat) {
+    setSelectedCats((prev) => {
+      const next = new Set(prev);
+      if (isChecked(cat)) {
+        if (prev.size === 0) {
+          // "All" mode — uncheck this one: select everything else
+          availCats.forEach((c) => { if (c !== cat) next.add(c); });
+        } else {
+          next.delete(cat);
+          // If we just removed the last one, go back to "All"
+        }
+      } else {
+        next.add(cat);
+        // If all cats selected, simplify back to empty (= All)
+        if (next.size === availCats.length) return new Set();
+      }
+      return next;
+    });
+  }
+
+  const label = allChecked
+    ? 'All Categories'
+    : selectedCats.size === 1
+      ? `1 Category selected`
+      : `${selectedCats.size} Categories selected`;
+
+  return (
+    <div className="cal-cat-dropdown" ref={ref}>
+      <button type="button" className={`cal-cat-dropdown-btn${!allChecked ? ' is-filtered' : ''}`}
+        onClick={() => setOpen((o) => !o)}>
+        <span className="cal-cat-dropdown-label">{label}</span>
+        <span className={`cal-cat-dropdown-arrow${open ? ' is-open' : ''}`}>&#9660;</span>
+      </button>
+
+      {open && (
+        <div className="cal-cat-dropdown-menu">
+          {/* Select All row */}
+          <label className="cal-cat-option cal-cat-option-all">
+            <input
+              type="checkbox"
+              checked={allChecked}
+              ref={(el) => { if (el) el.indeterminate = someChecked; }}
+              onChange={() => setSelectedCats(new Set())}
+            />
+            <span>All Categories</span>
+          </label>
+          <div className="cal-cat-divider" />
+          {availCats.map((cat) => (
+            <label key={cat} className="cal-cat-option">
+              <input type="checkbox" checked={isChecked(cat)} onChange={() => toggle(cat)} />
+              <span className="cal-cat-dot" style={{ background: CATEGORY_COLORS[cat] || '#4a5568' }} />
+              <span>{cat}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Month View ────────────────────────────────────────────────────────────────
 
-function MonthView({ year, month, events, todayIso, onPick }) {
+function MonthView({ year, month, events, todayIso, pickedDate, onPick, onPickDate }) {
   const firstDow = new Date(year, month, 1).getDay();
   const total    = new Date(year, month + 1, 0).getDate();
   const cells    = [];
@@ -173,10 +283,18 @@ function MonthView({ year, month, events, todayIso, onPick }) {
           if (!day) return <div key={`b${i}`} className="cal-month-cell cal-blank" />;
           const iso    = `${year}-${pad(month + 1)}-${pad(day)}`;
           const dayEvs = forDay(events, iso);
-          const isToday = iso === todayIso;
+          const isToday  = iso === todayIso;
+          const isPicked = iso === pickedDate;
           return (
-            <div key={day} className={`cal-month-cell${isToday ? ' is-today' : ''}`}>
-              <span className={`cal-day-num${isToday ? ' is-today-num' : ''}`}>{day}</span>
+            <div key={day} className={`cal-month-cell${isToday ? ' is-today' : ''}${isPicked ? ' is-picked' : ''}`}>
+              <button
+                type="button"
+                className={`cal-day-num${isToday ? ' is-today-num' : ''}${isPicked ? ' is-picked-num' : ''}`}
+                onClick={() => onPickDate(isPicked ? null : iso)}
+                title={`View events on ${fmtLong(iso)}`}
+              >
+                {day}
+              </button>
               <div className="cal-month-pills">
                 {dayEvs.slice(0, 3).map((ev) => (
                   <button key={ev.id} type="button"
@@ -199,7 +317,7 @@ function MonthView({ year, month, events, todayIso, onPick }) {
 
 // ── Week View ─────────────────────────────────────────────────────────────────
 
-function WeekView({ weekStart, events, todayIso, onPick }) {
+function WeekView({ weekStart, events, todayIso, pickedDate, onPick, onPickDate }) {
   const days = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(weekStart);
     d.setDate(d.getDate() + i);
@@ -211,21 +329,26 @@ function WeekView({ weekStart, events, todayIso, onPick }) {
 
   return (
     <div className="cal-tgrid-outer">
-      {/* Day headers */}
       <div className="cal-tgrid-header">
         <div className="cal-tgutter" />
         {days.map((d) => {
           const iso = toIso(d);
+          const isPicked = iso === pickedDate;
           return (
-            <div key={iso} className={`cal-tgrid-dhead${iso === todayIso ? ' is-today' : ''}`}>
+            <div key={iso} className={`cal-tgrid-dhead${iso === todayIso ? ' is-today' : ''}${isPicked ? ' is-picked' : ''}`}>
               <span className="cal-tgrid-dow">{DAY_SHORT[d.getDay()]}</span>
-              <span className={`cal-tgrid-datenum${iso === todayIso ? ' is-today-num' : ''}`}>{d.getDate()}</span>
+              <button
+                type="button"
+                className={`cal-tgrid-datenum${iso === todayIso ? ' is-today-num' : ''}${isPicked ? ' is-picked-num' : ''}`}
+                onClick={() => onPickDate(isPicked ? null : iso)}
+              >
+                {d.getDate()}
+              </button>
             </div>
           );
         })}
       </div>
 
-      {/* All-day row */}
       {hasAllDay && (
         <div className="cal-allday-strip">
           <div className="cal-tgutter cal-tgutter-label">All day</div>
@@ -242,7 +365,6 @@ function WeekView({ weekStart, events, todayIso, onPick }) {
         </div>
       )}
 
-      {/* Scrollable grid */}
       <div className="cal-tgrid-scroll">
         <div className="cal-tgrid-body">
           <div className="cal-tgutter-col">
@@ -355,12 +477,14 @@ export default function CalendarPage() {
   const todayDate = useMemo(() => startOfDay(new Date()), []);
   const todayIso  = useMemo(() => toIso(todayDate), [todayDate]);
 
-  const [view, setCurrent_view] = useState('month');
-  const [current, setCurrent] = useState(startOfDay(new Date()));
-  const [allEvents, setAllEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null);
-  const [listTab, setListTab] = useState('upcoming');
+  const [view, setView]               = useState('month');
+  const [current, setCurrent]         = useState(startOfDay(new Date()));
+  const [allEvents, setAllEvents]     = useState([]);
+  const [loading, setLoading]         = useState(true);
+  const [selected, setSelected]       = useState(null);
+  const [pickedDate, setPickedDate]   = useState(null);
+  const [listTab, setListTab]         = useState('upcoming');
+  const [selectedCats, setSelectedCats] = useState(new Set());
 
   useEffect(() => {
     getPublicEvents()
@@ -369,52 +493,72 @@ export default function CalendarPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Derive visible events for the current view window
+  // All categories that have at least one event
+  const availCats = useMemo(() => {
+    const cats = new Set(allEvents.map((ev) => ev.category || 'General'));
+    return [...cats].sort();
+  }, [allEvents]);
+
+  // Apply category filter to any event list
+  function filterCats(evs) {
+    if (selectedCats.size === 0) return evs;
+    return evs.filter((ev) => selectedCats.has(ev.category || 'General'));
+  }
+
+
   const visibleEvents = useMemo(() => {
     const y = current.getFullYear();
     const m = current.getMonth();
+    let evs;
     if (view === 'month') {
       const from = `${y}-${pad(m + 1)}-01`;
       const to   = `${y}-${pad(m + 1)}-${pad(new Date(y, m + 1, 0).getDate())}`;
-      return allEvents.filter((ev) => ev.event_date <= to && (ev.end_date || ev.event_date) >= from);
-    }
-    if (view === 'week') {
+      evs = allEvents.filter((ev) => ev.event_date <= to && (ev.end_date || ev.event_date) >= from);
+    } else if (view === 'week') {
       const ws  = startOfWeek(current);
       const we  = new Date(ws); we.setDate(we.getDate() + 6);
       const from = toIso(ws), to = toIso(we);
-      return allEvents.filter((ev) => ev.event_date <= to && (ev.end_date || ev.event_date) >= from);
+      evs = allEvents.filter((ev) => ev.event_date <= to && (ev.end_date || ev.event_date) >= from);
+    } else {
+      const iso = toIso(current);
+      evs = allEvents.filter((ev) => evSpansDay(ev, iso));
     }
-    const iso = toIso(current);
-    return allEvents.filter((ev) => evSpansDay(ev, iso));
-  }, [allEvents, view, current]);
+    return filterCats(evs);
+  }, [allEvents, view, current, selectedCats]);
 
-  // Upcoming / past lists from all events
   const upcomingEvents = useMemo(() =>
-    [...allEvents]
+    filterCats([...allEvents]
       .filter((ev) => (ev.end_date || ev.event_date) >= todayIso)
-      .sort((a, b) => a.event_date.localeCompare(b.event_date)),
-    [allEvents, todayIso]
+      .sort((a, b) => a.event_date.localeCompare(b.event_date))),
+    [allEvents, todayIso, selectedCats]
   );
+
   const pastEvents = useMemo(() =>
-    [...allEvents]
+    filterCats([...allEvents]
       .filter((ev) => (ev.end_date || ev.event_date) < todayIso)
-      .sort((a, b) => b.event_date.localeCompare(a.event_date)),
-    [allEvents, todayIso]
+      .sort((a, b) => b.event_date.localeCompare(a.event_date))),
+    [allEvents, todayIso, selectedCats]
+  );
+
+  const pickedDateEvents = useMemo(() =>
+    pickedDate ? filterCats(forDay(allEvents, pickedDate)) : [],
+    [allEvents, pickedDate, selectedCats]
   );
 
   function navigate(dir) {
+    setPickedDate(null);
     setCurrent((prev) => {
       const d = new Date(prev);
-      if (view === 'month')      { d.setMonth(d.getMonth() + dir); d.setDate(1); }
-      else if (view === 'week')  { d.setDate(d.getDate() + dir * 7); }
-      else                       { d.setDate(d.getDate() + dir); }
+      if (view === 'month')     { d.setMonth(d.getMonth() + dir); d.setDate(1); }
+      else if (view === 'week') { d.setDate(d.getDate() + dir * 7); }
+      else                      { d.setDate(d.getDate() + dir); }
       return d;
     });
   }
 
-  function setView(v) {
-    setCurrent_view(v);
-    // keep current date as reference; just change the view granularity
+  function handleSetView(v) {
+    setPickedDate(null);
+    setView(v);
   }
 
   function headerLabel() {
@@ -432,92 +576,122 @@ export default function CalendarPage() {
   }
 
   const weekStart = useMemo(() => startOfWeek(current), [current]);
-  const listEvents = listTab === 'upcoming' ? upcomingEvents : pastEvents;
 
   return (
     <div>
-      <PageBanner title="Events Calendar" />
+      <PageBanner title="Events Calendar" images={[calendarBanner]} />
 
       <section className="cal-page">
         <div className="container">
+          <div className="cal-two-col">
 
-          {/* ── Controls bar ─────────────────────────────────────────────── */}
-          <div className="cal-controls-bar">
-            <div className="cal-view-tabs">
-              {['day', 'week', 'month'].map((v) => (
-                <button key={v} type="button"
-                  className={`cal-view-tab${view === v ? ' is-active' : ''}`}
-                  onClick={() => setView(v)}>
-                  {v.charAt(0).toUpperCase() + v.slice(1)}
-                </button>
-              ))}
-            </div>
-
-            <div className="cal-nav-row">
-              <button type="button" className="cal-nav-btn" onClick={() => navigate(-1)} aria-label="Previous">&#8592;</button>
-              <button type="button" className="cal-today-btn" onClick={() => setCurrent(startOfDay(new Date()))}>Today</button>
-              <span className="cal-header-label">{headerLabel()}</span>
-              <button type="button" className="cal-nav-btn" onClick={() => navigate(1)} aria-label="Next">&#8594;</button>
-            </div>
-          </div>
-
-          {/* ── Calendar body ─────────────────────────────────────────────── */}
-          <div className="cal-body">
-            {loading ? (
-              <p className="cal-loading">Loading events…</p>
-            ) : view === 'month' ? (
-              <MonthView
-                year={current.getFullYear()} month={current.getMonth()}
-                events={visibleEvents} todayIso={todayIso} onPick={setSelected}
-              />
-            ) : view === 'week' ? (
-              <WeekView weekStart={weekStart} events={visibleEvents} todayIso={todayIso} onPick={setSelected} />
-            ) : (
-              <DayView date={current} events={visibleEvents} todayIso={todayIso} onPick={setSelected} />
-            )}
-          </div>
-
-          {/* ── Upcoming / Past list ──────────────────────────────────────── */}
-          <div className="cal-list-panel">
-            <div className="cal-list-header">
-              <button type="button"
-                className={`cal-list-tab${listTab === 'upcoming' ? ' is-active' : ''}`}
-                onClick={() => setListTab('upcoming')}>
-                Upcoming
-                <span className="cal-tab-badge">{upcomingEvents.length}</span>
-              </button>
-              <button type="button"
-                className={`cal-list-tab${listTab === 'past' ? ' is-active' : ''}`}
-                onClick={() => setListTab('past')}>
-                Past
-                <span className="cal-tab-badge">{pastEvents.length}</span>
-              </button>
-            </div>
-
-            {listEvents.length === 0 ? (
-              <p className="cal-list-empty">No events.</p>
-            ) : (
-              <ul className="cal-event-list">
-                {listEvents.map((ev) => (
-                  <li key={ev.id} className="cal-list-item-wrap">
-                    <button type="button" className="cal-list-item" onClick={() => setSelected(ev)}>
-                      <span className="cal-list-dot" style={{ background: evColor(ev) }} />
-                      <span className="cal-list-info">
-                        <span className="cal-list-title">{ev.title}</span>
-                        <span className="cal-list-meta">
-                          {fmtLong(ev.event_date)}
-                          {ev.start_time ? ` · ${fmt12(ev.start_time)}` : ''}
-                          {ev.location ? ` · ${ev.location}` : ''}
-                        </span>
-                      </span>
-                      <span className="cal-list-cat" style={{ color: evColor(ev) }}>{ev.category}</span>
+            {/* ── Left: controls + calendar ── */}
+            <div className="cal-left">
+              <div className="cal-controls-bar">
+                <div className="cal-view-tabs">
+                  {['day', 'week', 'month'].map((v) => (
+                    <button key={v} type="button"
+                      className={`cal-view-tab${view === v ? ' is-active' : ''}`}
+                      onClick={() => handleSetView(v)}>
+                      {v.charAt(0).toUpperCase() + v.slice(1)}
                     </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+                  ))}
+                </div>
 
+                {!loading && availCats.length > 0 && (
+                  <CategoryDropdown
+                    availCats={availCats}
+                    selectedCats={selectedCats}
+                    setSelectedCats={setSelectedCats}
+                  />
+                )}
+
+                <div className="cal-nav-row">
+                  <button type="button" className="cal-nav-btn" onClick={() => navigate(-1)} aria-label="Previous">&#8592;</button>
+                  <button type="button" className="cal-today-btn"
+                    onClick={() => { setCurrent(startOfDay(new Date())); setPickedDate(null); }}>
+                    Today
+                  </button>
+                  <span className="cal-header-label">{headerLabel()}</span>
+                  <button type="button" className="cal-nav-btn" onClick={() => navigate(1)} aria-label="Next">&#8594;</button>
+                </div>
+              </div>
+
+              <div className="cal-body">
+                {loading ? (
+                  <p className="cal-loading">Loading events…</p>
+                ) : view === 'month' ? (
+                  <MonthView
+                    year={current.getFullYear()} month={current.getMonth()}
+                    events={visibleEvents} todayIso={todayIso}
+                    pickedDate={pickedDate} onPick={setSelected} onPickDate={setPickedDate}
+                  />
+                ) : view === 'week' ? (
+                  <WeekView
+                    weekStart={weekStart} events={visibleEvents} todayIso={todayIso}
+                    pickedDate={pickedDate} onPick={setSelected} onPickDate={setPickedDate}
+                  />
+                ) : (
+                  <DayView date={current} events={visibleEvents} todayIso={todayIso} onPick={setSelected} />
+                )}
+              </div>
+            </div>
+
+            {/* ── Right: event list ── */}
+            <div className="cal-right">
+              <div className="cal-list-panel">
+
+                {pickedDate ? (
+                  <>
+                    <div className="cal-list-date-header">
+                      <div className="cal-list-date-title">{fmtLong(pickedDate)}</div>
+                      <button type="button" className="cal-list-clear-btn"
+                        onClick={() => setPickedDate(null)}>
+                        &#8592; All Events
+                      </button>
+                    </div>
+                    {pickedDateEvents.length === 0 ? (
+                      <p className="cal-list-empty">No events on this day.</p>
+                    ) : (
+                      <ul className="cal-event-list">
+                        {pickedDateEvents.map((ev) => (
+                          <EventListRow key={ev.id} ev={ev} onPick={setSelected} />
+                        ))}
+                      </ul>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div className="cal-list-header">
+                      <button type="button"
+                        className={`cal-list-tab${listTab === 'upcoming' ? ' is-active' : ''}`}
+                        onClick={() => setListTab('upcoming')}>
+                        Upcoming
+                        <span className="cal-tab-badge">{upcomingEvents.length}</span>
+                      </button>
+                      <button type="button"
+                        className={`cal-list-tab${listTab === 'past' ? ' is-active' : ''}`}
+                        onClick={() => setListTab('past')}>
+                        Past
+                        <span className="cal-tab-badge">{pastEvents.length}</span>
+                      </button>
+                    </div>
+                    {(listTab === 'upcoming' ? upcomingEvents : pastEvents).length === 0 ? (
+                      <p className="cal-list-empty">No events.</p>
+                    ) : (
+                      <ul className="cal-event-list">
+                        {(listTab === 'upcoming' ? upcomingEvents : pastEvents).map((ev) => (
+                          <EventListRow key={ev.id} ev={ev} onPick={setSelected} />
+                        ))}
+                      </ul>
+                    )}
+                  </>
+                )}
+
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
