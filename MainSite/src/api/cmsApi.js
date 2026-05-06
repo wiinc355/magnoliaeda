@@ -1,4 +1,18 @@
 import { apiRequest } from './apiClient';
+import { API_BASE_URL } from '../config/apiConfig';
+
+export async function uploadFile(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await fetch(`${API_BASE_URL}/api/cms/upload`, {
+    credentials: 'include',
+    method: 'POST',
+    body: formData
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Upload failed');
+  return data;
+}
 
 // ─── Stats ────────────────────────────────────────────────────────────────────
 

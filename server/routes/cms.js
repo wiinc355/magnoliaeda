@@ -48,16 +48,20 @@ router.get('/announcements', (req, res) => {
 });
 
 router.post('/announcements', (req, res) => {
-  const { title, body = '', category = 'General', is_active = 1, publish_at = null, expires_at = null } = req.body;
+  const {
+    title, body = '', category = 'General', is_active = 1,
+    publish_at = null, expires_at = null,
+    attachment_url = '', attachment_name = ''
+  } = req.body;
   if (!title || typeof title !== 'string' || !title.trim()) {
     return res.status(400).json({ error: 'title is required' });
   }
   const createdBy = req.session && req.session.user ? req.session.user.displayName : 'Staff';
   try {
     const result = db.prepare(
-      `INSERT INTO announcements (title, body, category, is_active, published_at, expires_at, created_by)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`
-    ).run(title.trim(), String(body), String(category), is_active ? 1 : 0, publish_at || null, expires_at || null, createdBy);
+      `INSERT INTO announcements (title, body, category, is_active, published_at, expires_at, attachment_url, attachment_name, created_by)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    ).run(title.trim(), String(body), String(category), is_active ? 1 : 0, publish_at || null, expires_at || null, String(attachment_url), String(attachment_name), createdBy);
     const row = db.prepare('SELECT * FROM announcements WHERE id = ?').get(result.lastInsertRowid);
     return res.status(201).json(row);
   } catch (error) {
@@ -68,15 +72,20 @@ router.post('/announcements', (req, res) => {
 router.put('/announcements/:id', (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id) || id <= 0) return res.status(400).json({ error: 'Invalid id' });
-  const { title, body = '', category = 'General', is_active = 1, publish_at = null, expires_at = null } = req.body;
+  const {
+    title, body = '', category = 'General', is_active = 1,
+    publish_at = null, expires_at = null,
+    attachment_url = '', attachment_name = ''
+  } = req.body;
   if (!title || typeof title !== 'string' || !title.trim()) {
     return res.status(400).json({ error: 'title is required' });
   }
   try {
     const result = db.prepare(
       `UPDATE announcements SET title = ?, body = ?, category = ?, is_active = ?,
-       published_at = ?, expires_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`
-    ).run(title.trim(), String(body), String(category), is_active ? 1 : 0, publish_at || null, expires_at || null, id);
+       published_at = ?, expires_at = ?, attachment_url = ?, attachment_name = ?,
+       updated_at = CURRENT_TIMESTAMP WHERE id = ?`
+    ).run(title.trim(), String(body), String(category), is_active ? 1 : 0, publish_at || null, expires_at || null, String(attachment_url), String(attachment_name), id);
     if (result.changes === 0) return res.status(404).json({ error: 'Not found' });
     return res.json(db.prepare('SELECT * FROM announcements WHERE id = ?').get(id));
   } catch (error) {
@@ -112,7 +121,8 @@ router.post('/events', (req, res) => {
     title, description = '', location = '', event_date, end_date = null,
     start_time = '', end_time = '', category = 'General',
     contact_name = '', contact_phone = '', contact_email = '',
-    publish_at = null, expires_at = null
+    publish_at = null, expires_at = null,
+    attachment_url = '', attachment_name = ''
   } = req.body;
   if (!title || typeof title !== 'string' || !title.trim()) {
     return res.status(400).json({ error: 'title is required' });
@@ -123,13 +133,15 @@ router.post('/events', (req, res) => {
     const result = db.prepare(
       `INSERT INTO events
          (title, description, location, event_date, end_date, start_time, end_time,
-          category, contact_name, contact_phone, contact_email, publish_at, expires_at, created_by)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+          category, contact_name, contact_phone, contact_email, publish_at, expires_at,
+          attachment_url, attachment_name, created_by)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).run(
       title.trim(), String(description), String(location), event_date, end_date || null,
       String(start_time), String(end_time), String(category),
       String(contact_name), String(contact_phone), String(contact_email),
-      publish_at || null, expires_at || null, createdBy
+      publish_at || null, expires_at || null,
+      String(attachment_url), String(attachment_name), createdBy
     );
     const row = db.prepare('SELECT * FROM events WHERE id = ?').get(result.lastInsertRowid);
     return res.status(201).json(row);
@@ -145,7 +157,8 @@ router.put('/events/:id', (req, res) => {
     title, description = '', location = '', event_date, end_date = null,
     start_time = '', end_time = '', category = 'General', is_active = 1,
     contact_name = '', contact_phone = '', contact_email = '',
-    publish_at = null, expires_at = null
+    publish_at = null, expires_at = null,
+    attachment_url = '', attachment_name = ''
   } = req.body;
   if (!title || typeof title !== 'string' || !title.trim()) {
     return res.status(400).json({ error: 'title is required' });
@@ -157,14 +170,14 @@ router.put('/events/:id', (req, res) => {
          title = ?, description = ?, location = ?, event_date = ?, end_date = ?,
          start_time = ?, end_time = ?, category = ?, is_active = ?,
          contact_name = ?, contact_phone = ?, contact_email = ?,
-         publish_at = ?, expires_at = ?,
+         publish_at = ?, expires_at = ?, attachment_url = ?, attachment_name = ?,
          updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`
     ).run(
       title.trim(), String(description), String(location), event_date, end_date || null,
       String(start_time), String(end_time), String(category), is_active ? 1 : 0,
       String(contact_name), String(contact_phone), String(contact_email),
-      publish_at || null, expires_at || null, id
+      publish_at || null, expires_at || null, String(attachment_url), String(attachment_name), id
     );
     if (result.changes === 0) return res.status(404).json({ error: 'Not found' });
     return res.json(db.prepare('SELECT * FROM events WHERE id = ?').get(id));

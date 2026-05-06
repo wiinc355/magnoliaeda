@@ -103,6 +103,12 @@ db.exec(`
   try { db.exec(`ALTER TABLE announcements ADD COLUMN ${col} TEXT DEFAULT NULL`); } catch (_) {}
 });
 
+// Attachment columns
+['attachment_url', 'attachment_name'].forEach((col) => {
+  try { db.exec(`ALTER TABLE events ADD COLUMN ${col} TEXT DEFAULT ''`); } catch (_) {}
+  try { db.exec(`ALTER TABLE announcements ADD COLUMN ${col} TEXT DEFAULT ''`); } catch (_) {}
+});
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS user_profiles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

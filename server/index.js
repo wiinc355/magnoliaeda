@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -7,6 +8,7 @@ const connectPgSimple = require('connect-pg-simple');
 const projectsRoutes = require('./routes/projects');
 const contactsRoutes = require('./routes/contacts');
 const cmsRoutes = require('./routes/cms');
+const uploadRoutes = require('./routes/upload');
 const authRoutes = require('./routes/auth');
 const secureRoutes = require('./routes/secure');
 const publicDataRoutes = require('./routes/publicData');
@@ -95,6 +97,9 @@ app.get('/health', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date().toISOString() });
 });
 
+// Serve uploaded files publicly
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.use('/api/public', publicDataRoutes);
 app.use('/api/secure', secureRoutes);
 app.use(
@@ -102,6 +107,12 @@ app.use(
   requireAuth,
   requireAnyRole(['Admin', 'Staff']),
   cmsRoutes
+);
+app.use(
+  '/api/cms',
+  requireAuth,
+  requireAnyRole(['Admin', 'Staff']),
+  uploadRoutes
 );
 app.use(
   '/api/projects',
