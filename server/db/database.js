@@ -110,6 +110,32 @@ db.exec(`
 });
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS marquee_messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    text TEXT NOT NULL,
+    link_url TEXT DEFAULT '',
+    is_active INTEGER DEFAULT 1,
+    sort_order INTEGER DEFAULT 0,
+    publish_at TEXT,
+    expires_at TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS marquee_settings (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    is_enabled INTEGER DEFAULT 1,
+    duration_seconds INTEGER DEFAULT 40,
+    background_color TEXT DEFAULT '#0a4f90',
+    text_color TEXT DEFAULT '#ffffff',
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+db.prepare(`INSERT OR IGNORE INTO marquee_settings (id) VALUES (1)`).run();
+
+db.exec(`
   CREATE TABLE IF NOT EXISTS subscribers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     full_name TEXT NOT NULL,

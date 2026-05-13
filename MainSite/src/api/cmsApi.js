@@ -231,3 +231,42 @@ export function sendBlast(data) {
     body: JSON.stringify(data)
   });
 }
+
+// ─── Marquee (public + admin) ────────────────────────────────────────────────
+
+export function getPublicMarquee() {
+  return apiRequest('/api/public/marquee');
+}
+
+export function getMarqueeSettings() {
+  return apiRequest('/api/cms/marquee-settings');
+}
+
+export function updateMarqueeSettings(data) {
+  return apiRequest('/api/cms/marquee-settings', {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  });
+}
+
+export function getMarqueeMessages() {
+  return apiRequest('/api/cms/marquee-messages');
+}
+
+export function createMarqueeMessage(data) {
+  return apiRequest('/api/cms/marquee-messages', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+}
+
+export function updateMarqueeMessage(id, data) {
+  return apiRequest(`/api/cms/marquee-messages/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  });
+}
+
+export function deleteMarqueeMessage(id) {
+  return apiRequest(`/api/cms/marquee-messages/${id}`, { method: 'DELETE' });
+}

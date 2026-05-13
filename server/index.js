@@ -11,6 +11,7 @@ const cmsRoutes = require('./routes/cms');
 const uploadRoutes = require('./routes/upload');
 const enotifyRoutes = require('./routes/enotify');
 const subscribersRoutes = require('./routes/subscribers');
+const { router: marqueeRoutes, publicMarquee } = require('./routes/marquee');
 const authRoutes = require('./routes/auth');
 const secureRoutes = require('./routes/secure');
 const publicDataRoutes = require('./routes/publicData');
@@ -104,6 +105,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/public', publicDataRoutes);
 app.use('/api/public/enotify', enotifyRoutes);
+app.get('/api/public/marquee', publicMarquee);
 app.use('/api/secure', secureRoutes);
 app.use(
   '/api/cms',
@@ -122,6 +124,12 @@ app.use(
   requireAuth,
   requireAnyRole(['Admin', 'Staff']),
   subscribersRoutes
+);
+app.use(
+  '/api/cms',
+  requireAuth,
+  requireAnyRole(['Admin', 'Staff']),
+  marqueeRoutes
 );
 app.use(
   '/api/projects',

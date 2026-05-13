@@ -4433,6 +4433,215 @@
 	}
 }
 
+/* ─── Site Marquee (public, scrolls below header) ─────────────────────────────── */
+
+.site-marquee {
+	position: relative;
+	overflow: hidden;
+	white-space: nowrap;
+	padding: 0.45rem 0;
+	font-size: 0.95rem;
+	font-weight: 500;
+	border-bottom: 1px solid rgba(255,255,255,0.15);
+	cursor: default;
+	user-select: none;
+}
+
+.site-marquee-track {
+	display: inline-block;
+	padding-left: 100%;
+	animation-name: site-marquee-scroll;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	will-change: transform;
+}
+
+@keyframes site-marquee-scroll {
+	from { transform: translateX(0); }
+	to   { transform: translateX(-50%); }
+}
+
+.site-marquee-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin-right: 2.5rem;
+}
+
+.site-marquee-dot {
+	opacity: 0.75;
+	font-size: 1.2rem;
+	line-height: 1;
+}
+
+.site-marquee-text {
+	letter-spacing: 0.02em;
+}
+
+.site-marquee-link {
+	text-decoration: none;
+}
+
+.site-marquee-link:hover .site-marquee-text {
+	text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site-marquee-track { animation: none !important; }
+	.site-marquee { white-space: normal; }
+	.site-marquee-item { display: inline-block; margin: 0 1rem; }
+}
+
+/* ─── Marquee Manager (dashboard) ──────────────────────────────────────────── */
+
+.mq-controls-card {
+	background: #fff;
+	border: 1px solid #dce6f0;
+	border-radius: 10px;
+	padding: 1.1rem 1.25rem;
+	margin-bottom: 1.25rem;
+	box-shadow: 0 1px 3px rgba(10,79,144,0.05);
+}
+
+.mq-controls-row {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.55rem 0;
+	border-bottom: 1px solid #f0f4f8;
+	flex-wrap: wrap;
+}
+
+.mq-controls-row:last-child { border-bottom: none; }
+
+.mq-controls-label {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-width: 200px;
+}
+
+.mq-controls-label strong { color: #0a4f90; font-size: 1rem; }
+
+.mq-controls-sub {
+	font-size: 0.82rem;
+	color: #6b7280;
+	margin-top: 0.15rem;
+}
+
+/* iOS-style toggle */
+.mq-toggle {
+	position: relative;
+	display: inline-block;
+	width: 52px;
+	height: 28px;
+	flex-shrink: 0;
+}
+
+.mq-toggle input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.mq-toggle-slider {
+	position: absolute;
+	inset: 0;
+	background: #cbd5e0;
+	border-radius: 999px;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.mq-toggle-slider::before {
+	content: '';
+	position: absolute;
+	left: 3px;
+	top: 3px;
+	width: 22px;
+	height: 22px;
+	background: #fff;
+	border-radius: 50%;
+	transition: transform 0.2s;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.mq-toggle input:checked + .mq-toggle-slider {
+	background: #15803d;
+}
+
+.mq-toggle input:checked + .mq-toggle-slider::before {
+	transform: translateX(24px);
+}
+
+.mq-saving, .mq-saved {
+	font-size: 0.85rem;
+	margin-left: auto;
+}
+
+.mq-saving { color: #6b7280; }
+.mq-saved  { color: #15803d; font-weight: 600; }
+
+.mq-controls-speed {
+	display: grid;
+	grid-template-columns: 220px 1fr;
+	gap: 1rem;
+	align-items: center;
+}
+
+.mq-speed-label {
+	display: flex;
+	flex-direction: column;
+}
+
+.mq-speed-label strong {
+	color: #0a4f90;
+	font-size: 1rem;
+}
+
+.mq-speed-slider {
+	width: 100%;
+	accent-color: #0a4f90;
+	cursor: pointer;
+}
+
+.mq-controls-colors {
+	gap: 1.5rem;
+}
+
+.mq-color-field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	align-items: center;
+}
+
+.mq-color-field input[type="color"] {
+	width: 48px;
+	height: 32px;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	padding: 0;
+	cursor: pointer;
+	background: transparent;
+}
+
+.mq-preview {
+	flex: 1;
+	border-radius: 6px;
+	padding: 0.5rem 0.875rem;
+	font-size: 0.92rem;
+	font-weight: 500;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	min-width: 200px;
+}
+
+@media (max-width: 720px) {
+	.mq-controls-speed { grid-template-columns: 1fr; }
+}
+
 /* ─── eNotify public subscribe / confirm / unsubscribe pages ─────────────────── */
 
 .enotify-page {
