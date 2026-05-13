@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import MunicipalIcon from '../components/MunicipalIcon';
 import { useLanguage } from '../i18n/LanguageContext';
+import { getPublicAnnouncements } from '../api/cmsApi';
+import { API_BASE_URL } from '../config/apiConfig';
 import heroImage1 from '../image/hero-1.png';
 import heroImage2 from '../image/hero-2.png';
 import heroImage3 from '../image/hero-3.png';
@@ -20,9 +22,32 @@ const heroImages = [
   heroImage7
 ];
 
+function fmtAnnDate(d, isSpanish) {
+  if (!d) return '';
+  const dt = new Date(d);
+  if (isNaN(dt)) return '';
+  return dt.toLocaleDateString(isSpanish ? 'es-US' : 'en-US', { month: 'short', day: 'numeric' });
+}
+
+function fmtAnnFullDate(d, isSpanish) {
+  if (!d) return '';
+  const dt = new Date(d);
+  if (isNaN(dt)) return '';
+  return dt.toLocaleDateString(isSpanish ? 'es-US' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function resolveAttachUrl(url) {
+  if (!url) return '';
+  return url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
+}
+
 export default function CityHome() {
   const { isSpanish } = useLanguage();
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
+
+  const [liveAnnouncements, setLiveAnnouncements] = useState([]);
+  const [annLoading, setAnnLoading]               = useState(true);
+  const [selectedAnn, setSelectedAnn]             = useState(null);
 
   const text = isSpanish ? {
     kicker: 'Sirviendo a los residentes con orgullo',
@@ -198,6 +223,33 @@ export default function CityHome() {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    getPublicAnnouncements()
+      .then((all) => {
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - 30);
+        const filtered = (all || []).filter((ann) => {
+          const dt = new Date(ann.published_at || ann.created_at);
+          return !isNaN(dt) && dt >= cutoff;
+        });
+        filtered.sort((a, b) => {
+          const ad = a.published_at || a.created_at || '';
+          const bd = b.published_at || b.created_at || '';
+          return bd.localeCompare(ad);
+        });
+        setLiveAnnouncements(filtered);
+      })
+      .catch(() => setLiveAnnouncements([]))
+      .finally(() => setAnnLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (!selectedAnn) return;
+    function onKey(e) { if (e.key === 'Escape') setSelectedAnn(null); }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [selectedAnn]);
+
   return (
     <div className="municipal-homepage">
       <section className="municipal-hero-section">
@@ -227,11 +279,22 @@ export default function CityHome() {
               <MunicipalIcon name="megaphone" />
               <h2>{text.announcementsTitle}</h2>
             </div>
-            <ul className="municipal-announcement-list">
-              {text.announcements.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+            {annLoading ? (
+              <p className="municipal-ann-status">{isSpanish ? 'Cargando anuncios…' : 'Loading announcements…'}</p>
+            ) : liveAnnouncements.length === 0 ? (
+              <p className="municipal-ann-status">{isSpanish ? 'Sin anuncios recientes.' : 'No recent announcements.'}</p>
+            ) : (
+              <ul className="municipal-announcement-list municipal-ann-scroll">
+                {liveAnnouncements.map((ann) => (
+                  <li key={ann.id}>
+                    <button type="button" className="municipal-ann-item" onClick={() => setSelectedAnn(ann)}>
+                      <span className="municipal-ann-text">{ann.title}</span>
+                      <span className="municipal-ann-date">{fmtAnnDate(ann.published_at || ann.created_at, isSpanish)}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
             <Link to="/alerts/enotify" className="municipal-primary-btn">{text.registerAlerts}</Link>
           </aside>
         </div>
@@ -293,6 +356,25 @@ export default function CityHome() {
           </div>
         </div>
       </section>
+
+      {selectedAnn && (
+        <div className="ann-modal-overlay" onClick={() => setSelectedAnn(null)} role="presentation">
+          <div className="ann-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="ann-modal-title">
+            <button type="button" className="ann-modal-close" aria-label="Close" onClick={() => setSelectedAnn(null)}>×</button>
+            <h3 id="ann-modal-title" className="ann-modal-title">{selectedAnn.title}</h3>
+            <div className="ann-modal-meta">
+              {selectedAnn.category && <span className="ann-modal-cat">{selectedAnn.category}</span>}
+              <span className="ann-modal-date">{fmtAnnFullDate(selectedAnn.published_at || selectedAnn.created_at, isSpanish)}</span>
+            </div>
+            {selectedAnn.body && <p className="ann-modal-body">{selectedAnn.body}</p>}
+            {selectedAnn.attachment_url && (
+              <a href={resolveAttachUrl(selectedAnn.attachment_url)} target="_blank" rel="noreferrer" className="ann-modal-attach">
+                📎 {selectedAnn.attachment_name || (isSpanish ? 'Ver documento' : 'View Document')}
+              </a>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

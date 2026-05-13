@@ -1001,6 +1001,188 @@
 	margin-top: 0.55rem;
 }
 
+/* ─── Live announcements list on home page ─────────────────────────────────── */
+
+.municipal-ann-scroll {
+	list-style: none;
+	padding-left: 0;
+	max-height: 330px;
+	overflow-y: auto;
+	margin-right: -0.4rem;
+	padding-right: 0.4rem;
+}
+
+.municipal-ann-scroll::-webkit-scrollbar {
+	width: 6px;
+}
+.municipal-ann-scroll::-webkit-scrollbar-thumb {
+	background: rgba(10,79,144,0.25);
+	border-radius: 3px;
+}
+.municipal-ann-scroll::-webkit-scrollbar-thumb:hover {
+	background: rgba(10,79,144,0.45);
+}
+
+.municipal-ann-item {
+	display: flex;
+	gap: 0.6rem;
+	align-items: flex-start;
+	width: 100%;
+	background: transparent;
+	border: none;
+	border-left: 3px solid transparent;
+	padding: 0.5rem 0.6rem;
+	border-radius: 4px;
+	text-align: left;
+	cursor: pointer;
+	font: inherit;
+	color: inherit;
+	line-height: 1.45;
+	transition: background 0.12s, border-color 0.12s;
+}
+
+.municipal-ann-item:hover,
+.municipal-ann-item:focus-visible {
+	background: rgba(10,79,144,0.06);
+	border-left-color: #f2b21c;
+	outline: none;
+}
+
+.municipal-ann-text {
+	flex: 1;
+	font-size: 0.96rem;
+	color: #0f172a;
+}
+
+.municipal-ann-date {
+	flex-shrink: 0;
+	font-size: 0.78rem;
+	color: #6b7280;
+	font-weight: 600;
+	white-space: nowrap;
+	padding-top: 0.1rem;
+}
+
+.municipal-ann-status {
+	font-size: 0.92rem;
+	color: #6b7280;
+	margin: 0 0 1rem;
+	padding: 0.4rem 0;
+}
+
+/* ─── Announcement detail modal ─────────────────────────────────────────────── */
+
+.ann-modal-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(8,28,52,0.55);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10000;
+	padding: 1rem;
+	animation: ann-overlay-fade 0.15s ease-out;
+}
+
+@keyframes ann-overlay-fade {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+.ann-modal {
+	position: relative;
+	background: #fff;
+	border-radius: 12px;
+	max-width: 560px;
+	width: 100%;
+	max-height: 85vh;
+	overflow-y: auto;
+	padding: 1.75rem 1.75rem 1.5rem;
+	box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+	animation: ann-modal-pop 0.18s ease-out;
+}
+
+@keyframes ann-modal-pop {
+	from { transform: translateY(8px) scale(0.98); opacity: 0; }
+	to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.ann-modal-close {
+	position: absolute;
+	top: 0.6rem;
+	right: 0.8rem;
+	width: 36px;
+	height: 36px;
+	border: none;
+	background: transparent;
+	font-size: 1.7rem;
+	line-height: 1;
+	color: #6b7280;
+	cursor: pointer;
+	border-radius: 50%;
+}
+
+.ann-modal-close:hover {
+	background: #f3f4f6;
+	color: #0f172a;
+}
+
+.ann-modal-title {
+	font-family: 'Bree Serif', serif;
+	font-size: 1.5rem;
+	color: #0a4f90;
+	margin: 0 2.5rem 0.6rem 0;
+	line-height: 1.25;
+}
+
+.ann-modal-meta {
+	display: flex;
+	gap: 0.6rem;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+	padding-bottom: 0.875rem;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.ann-modal-cat {
+	display: inline-block;
+	background: #0a4f90;
+	color: #fff;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	padding: 0.2rem 0.6rem;
+	border-radius: 999px;
+}
+
+.ann-modal-date {
+	font-size: 0.85rem;
+	color: #6b7280;
+}
+
+.ann-modal-body {
+	font-size: 0.98rem;
+	line-height: 1.65;
+	color: #1f2937;
+	white-space: pre-wrap;
+	margin: 0 0 1rem;
+}
+
+.ann-modal-attach {
+	display: inline-block;
+	margin-top: 0.25rem;
+	color: #0a4f90;
+	font-weight: 600;
+	font-size: 0.92rem;
+	text-decoration: none;
+}
+
+.ann-modal-attach:hover {
+	text-decoration: underline;
+}
+
 .municipal-section {
 	padding: 4rem 0;
 }
