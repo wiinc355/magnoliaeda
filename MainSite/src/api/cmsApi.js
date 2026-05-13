@@ -221,6 +221,25 @@ export function deleteSubscriber(id) {
   return apiRequest(`/api/cms/subscribers/${id}`, { method: 'DELETE' });
 }
 
+// ─── Manage Subscription (self-service by token) ────────────────────────────
+
+export function getSubscriptionByToken(token) {
+  return apiRequest(`/api/public/enotify/manage/${encodeURIComponent(token)}`);
+}
+
+export function updateSubscriptionByToken(token, data) {
+  return apiRequest(`/api/public/enotify/manage/${encodeURIComponent(token)}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  });
+}
+
+export function deleteSubscriptionByToken(token) {
+  return apiRequest(`/api/public/enotify/manage/${encodeURIComponent(token)}`, {
+    method: 'DELETE'
+  });
+}
+
 export function getNotificationsLog(limit = 200) {
   return apiRequest(`/api/cms/notifications-log?limit=${limit}`);
 }

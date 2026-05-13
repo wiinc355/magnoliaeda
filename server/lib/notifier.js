@@ -45,8 +45,13 @@ function buildUnsubscribeUrl(token) {
   return `${APP_BASE_URL}/enotify/unsubscribe/${encodeURIComponent(token)}`;
 }
 
+function buildManageUrl(token) {
+  return `${APP_BASE_URL}/enotify/manage/${encodeURIComponent(token)}`;
+}
+
 async function sendConfirmation(subscriber) {
   const confirmUrl = buildConfirmUrl(subscriber.confirm_token);
+  const manageUrl = buildManageUrl(subscriber.unsubscribe_token);
   const channels = String(subscriber.channels || 'email').split(',').map((s) => s.trim()).filter(Boolean);
   const results = {};
 
@@ -60,6 +65,8 @@ async function sendConfirmation(subscriber) {
         `Thanks for subscribing to City of Magnolia alerts. ` +
         `Please confirm your subscription by clicking the link below:\n\n` +
         `${confirmUrl}\n\n` +
+        `Once confirmed, you can manage your subscription preferences here:\n` +
+        `${manageUrl}\n\n` +
         `If you did not request this, you can ignore this message.`,
       related_type: 'confirmation',
       related_id: subscriber.id

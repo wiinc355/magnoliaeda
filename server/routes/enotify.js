@@ -113,4 +113,103 @@ router.get('/categories', (_req, res) => {
   res.json({ categories: ALLOWED_CATEGORIES, channels: ALLOWED_CHANNELS });
 });
 
+// ─── Manage Subscription (subscriber self-service) ────────────────────────────
+
+router.get('/manage/:token', (req, res) => {
+  const t = String(req.params.token || '').trim();
+  if (!t) return res.status(400).json({ error: 'Missing token' });
+  try {
+    const row = db.prepare(
+      `SELECT id, full_name, email, phone, channels, categories, status FROM subscribers 
+        WHERE unsubscribe_token = ?`
+    ).get(t);
+    if (!row) return res.status(404).json({ error: 'Invalid or expired token' });
+    return res.json({
+      id: row.id,
+      full_name: row.full_name,
+      email: row.email,
+      phone: row.phone,
+      channels: row.channels ? row.channels.split(',') : [],
+      categories: row.categories ? JSON.parse(row.categories || '[]') : [],
+      status: row.status
+    });
+  } catch (_) {
+    return res.status(500).json({ error: 'Failed to fetch subscription details' });
+  }
+});
+
+router.put('/manage/:token', (req, res) => {
+  const t = String(req.params.token || '').trim();
+  if (!t) return res.status(400).json({ error: 'Missing token' });
+  const { full_name, email, phone, channels, categories } = req.body || {};
+  
+  const name = String(full_name || '').trim();
+  const cleanEmail = String(email || '').trim().toLowerCase();
+  const cleanPhone = String(phone || '').trim();
+  const cleanChannels = normalizeChannels(channels || []);
+  const cleanCategories = normalizeCategories(categories || []);
+
+  if (!name) return res.status(400).json({ error: 'Name is required' });
+  if (cleanChannels.length === 0) return res.status(400).json({ error: 'At least one channel is required' });
+  if (cleanChannels.includes('email') && !cleanEmail) return res.status(400).json({ error: 'Email required for email channel' });
+  if (cleanChannels.includes('sms') && !cleanPhone) return res.status(400).json({ error: 'Phone required for SMS channel' });
+  if (cleanEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return res.status(400).json({ error: 'Invalid email' });
+
+  try {
+    const row = db.prepare(`SELECT * FROM subscribers WHERE unsubscribe_token = ?`).get(t);
+    if (!row) return res.status(404).json({ error: 'Invalid or expired token' });
+
+    // Check if new email already exists and is different
+    if (cleanEmail && cleanEmail !== row.email) {
+      const existing = db.prepare(
+        `SELECT id FROM subscribers WHERE email = ? COLLATE NOCASE AND id != ?`
+      ).get(cleanEmail, row.id);
+      if (existing) return res.status(409).json({ error: 'This email is already used by another subscription' });
+    }
+
+    db.prepare(
+      `UPDATE subscribers 
+        SET full_name = ?, email = ?, phone = ?, channels = ?, categories = ?
+        WHERE unsubscribe_token = ?`
+    ).run(
+      name, cleanEmail, cleanPhone,
+      cleanChannels.join(','),
+      JSON.stringify(cleanCategories),
+      t
+    );
+
+    const updated = db.prepare(
+      `SELECT id, full_name, email, phone, channels, categories, status FROM subscribers 
+        WHERE unsubscribe_token = ?`
+    ).get(t);
+
+    return res.json({
+      success: true,
+      id: updated.id,
+      full_name: updated.full_name,
+      email: updated.email,
+      phone: updated.phone,
+      channels: updated.channels ? updated.channels.split(',') : [],
+      categories: updated.categories ? JSON.parse(updated.categories || '[]') : [],
+      status: updated.status
+    });
+  } catch (_) {
+    return res.status(500).json({ error: 'Failed to update subscription' });
+  }
+});
+
+router.delete('/manage/:token', (req, res) => {
+  const t = String(req.params.token || '').trim();
+  if (!t) return res.status(400).json({ error: 'Missing token' });
+  try {
+    const row = db.prepare(`SELECT * FROM subscribers WHERE unsubscribe_token = ?`).get(t);
+    if (!row) return res.status(404).json({ error: 'Invalid or expired token' });
+    
+    db.prepare(`DELETE FROM subscribers WHERE unsubscribe_token = ?`).run(t);
+    return res.json({ success: true, message: 'Subscription deleted' });
+  } catch (_) {
+    return res.status(500).json({ error: 'Failed to delete subscription' });
+  }
+});
+
 module.exports = router;

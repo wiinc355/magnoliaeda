@@ -14,6 +14,7 @@ import CalendarPage from './pages/CalendarPage';
 import EventsPage from './pages/EventsPage';
 import AnnouncementsPage from './pages/AnnouncementsPage';
 import { EnotifySubscribePage, EnotifyConfirmPage, EnotifyUnsubscribePage } from './pages/EnotifyPage';
+import SubscriptionManagePage from './pages/SubscriptionManagePage';
 import ContentPage from './pages/ContentPage';
 import SearchPage from './pages/SearchPage';
 import PoliceDept from './pages/PoliceDept';
@@ -127,6 +128,7 @@ function App() {
                 <Route path="/enotify" element={<EnotifySubscribePage />} />
                 <Route path="/enotify/confirm/:token" element={<EnotifyConfirmPage />} />
                 <Route path="/enotify/unsubscribe/:token" element={<EnotifyUnsubscribePage />} />
+                <Route path="/enotify/manage/:token" element={<SubscriptionManagePage />} />
                 <Route path="/alerts/enotify" element={<EnotifySubscribePage />} />
                 <Route path="/how-do-i/contact-us" element={<ContentPage pageKey="contactUs" />} />
                 <Route path="/search" element={<SearchPage />} />
