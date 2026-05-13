@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../db/database');
+const notifier = require('../lib/notifier');
 
 const router = express.Router();
 
@@ -63,6 +64,17 @@ router.post('/announcements', (req, res) => {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).run(title.trim(), String(body), String(category), is_active ? 1 : 0, publish_at || null, expires_at || null, String(attachment_url), String(attachment_name), createdBy);
     const row = db.prepare('SELECT * FROM announcements WHERE id = ?').get(result.lastInsertRowid);
+
+    if (row.is_active && (!row.published_at || row.published_at <= new Date().toISOString().slice(0, 16))) {
+      notifier.fanOut({
+        category: row.category,
+        subject: `[Magnolia] ${row.title}`,
+        body: row.body || row.title,
+        related_type: 'announcement',
+        related_id: row.id
+      }).catch(() => {});
+    }
+
     return res.status(201).json(row);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to create announcement' });
@@ -144,6 +156,18 @@ router.post('/events', (req, res) => {
       String(attachment_url), String(attachment_name), createdBy
     );
     const row = db.prepare('SELECT * FROM events WHERE id = ?').get(result.lastInsertRowid);
+
+    if (row.is_active && (!row.publish_at || row.publish_at <= new Date().toISOString().slice(0, 16))) {
+      const when = row.event_date + (row.start_time ? ` at ${row.start_time}` : '');
+      notifier.fanOut({
+        category: row.category,
+        subject: `[Magnolia Event] ${row.title}`,
+        body: `${row.title}\nWhen: ${when}${row.location ? `\nWhere: ${row.location}` : ''}${row.description ? `\n\n${row.description}` : ''}`,
+        related_type: 'event',
+        related_id: row.id
+      }).catch(() => {});
+    }
+
     return res.status(201).json(row);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to create event' });

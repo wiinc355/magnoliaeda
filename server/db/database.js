@@ -110,6 +110,42 @@ db.exec(`
 });
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS subscribers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    full_name TEXT NOT NULL,
+    email TEXT,
+    phone TEXT,
+    channels TEXT NOT NULL DEFAULT 'email',
+    categories TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'pending',
+    email_confirmed INTEGER DEFAULT 0,
+    phone_confirmed INTEGER DEFAULT 0,
+    confirm_token TEXT,
+    unsubscribe_token TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    confirmed_at TEXT,
+    unsubscribed_at TEXT,
+    notes TEXT DEFAULT ''
+  )
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS notifications_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subscriber_id INTEGER,
+    recipient TEXT NOT NULL,
+    channel TEXT NOT NULL,
+    subject TEXT,
+    body TEXT,
+    related_type TEXT,
+    related_id INTEGER,
+    status TEXT NOT NULL DEFAULT 'mocked',
+    error TEXT,
+    sent_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+db.exec(`
   CREATE TABLE IF NOT EXISTS user_profiles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT UNIQUE NOT NULL,

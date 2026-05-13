@@ -4433,6 +4433,215 @@
 	}
 }
 
+/* ─── eNotify public subscribe / confirm / unsubscribe pages ─────────────────── */
+
+.enotify-page {
+	padding: 2rem 0 3.5rem;
+	background: #f6f8fb;
+	min-height: 60vh;
+}
+
+.enotify-container {
+	max-width: 720px;
+}
+
+.enotify-intro h1 {
+	font-family: 'Bree Serif', serif;
+	color: #0a4f90;
+	margin: 0 0 0.5rem;
+}
+
+.enotify-intro p {
+	color: #374151;
+	line-height: 1.6;
+	margin: 0 0 1.5rem;
+}
+
+.enotify-card {
+	background: #fff;
+	border: 1px solid #dce6f0;
+	border-radius: 10px;
+	padding: 1.75rem;
+	box-shadow: 0 2px 8px rgba(10,79,144,0.05);
+}
+
+.enotify-success h2 {
+	color: #0a4f90;
+	margin: 0 0 0.75rem;
+}
+
+.enotify-error-card h2 { color: #b91c1c; margin: 0 0 0.5rem; }
+
+.enotify-link {
+	color: #0a4f90;
+	font-weight: 600;
+	text-decoration: none;
+}
+.enotify-link:hover { text-decoration: underline; }
+
+.enotify-form .enotify-row { margin-bottom: 1rem; }
+
+.enotify-form label {
+	display: block;
+	font-weight: 600;
+	color: #1f2937;
+	margin-bottom: 0.3rem;
+	font-size: 0.92rem;
+}
+
+.enotify-form input[type="text"],
+.enotify-form input[type="email"],
+.enotify-form input[type="tel"] {
+	width: 100%;
+	padding: 0.55rem 0.8rem;
+	border: 1px solid #c5d5e8;
+	border-radius: 6px;
+	font-size: 0.95rem;
+	background: #fff;
+	box-sizing: border-box;
+}
+
+.enotify-form input:focus {
+	outline: none;
+	border-color: #0a4f90;
+	box-shadow: 0 0 0 2px rgba(10,79,144,0.15);
+}
+
+.enotify-req { color: #b91c1c; margin-left: 0.15rem; }
+
+.enotify-fieldset {
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	padding: 0.75rem 1rem 0.875rem;
+	margin: 0 0 1rem;
+}
+
+.enotify-fieldset legend {
+	font-weight: 700;
+	color: #0a4f90;
+	font-size: 0.88rem;
+	padding: 0 0.4rem;
+}
+
+.enotify-check {
+	display: inline-flex !important;
+	align-items: center;
+	gap: 0.4rem;
+	margin-right: 1.2rem;
+	margin-top: 0.4rem;
+	font-weight: 500 !important;
+	color: #374151;
+	cursor: pointer;
+}
+
+.enotify-cat-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+	gap: 0.35rem 1rem;
+	margin-top: 0.25rem;
+}
+
+.enotify-submit {
+	background: #0a4f90;
+	color: #fff;
+	border: none;
+	padding: 0.7rem 1.6rem;
+	border-radius: 999px;
+	font-weight: 700;
+	font-size: 0.98rem;
+	cursor: pointer;
+}
+
+.enotify-submit:hover { background: #083c70; }
+.enotify-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.enotify-fineprint {
+	margin-top: 1rem;
+	font-size: 0.78rem;
+	color: #6b7280;
+	line-height: 1.5;
+}
+
+.enotify-error {
+	background: #fef2f2;
+	border: 1px solid #fecaca;
+	color: #991b1b;
+	padding: 0.6rem 0.875rem;
+	border-radius: 6px;
+	margin: 0.5rem 0 0.75rem;
+	font-size: 0.9rem;
+}
+
+/* ─── Subscribers manager (dashboard) ──────────────────────────────────────── */
+
+.sub-stat-row {
+	display: flex;
+	gap: 0.75rem;
+	margin-bottom: 1.25rem;
+	flex-wrap: wrap;
+}
+
+.sub-stat {
+	background: #fff;
+	border: 1px solid #dce6f0;
+	border-radius: 8px;
+	padding: 0.7rem 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	min-width: 110px;
+	font-size: 0.82rem;
+	color: #6b7280;
+}
+
+.sub-stat-num {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: #0a4f90;
+	line-height: 1;
+	margin-bottom: 0.15rem;
+}
+
+.sub-stat-green .sub-stat-num  { color: #15803d; }
+.sub-stat-yellow .sub-stat-num { color: #b45309; }
+.sub-stat-grey .sub-stat-num   { color: #6b7280; }
+
+.sub-tabs {
+	display: flex;
+	gap: 0.4rem;
+	margin: 0 0 0.75rem;
+	border-bottom: 1px solid #dce6f0;
+}
+
+.sub-tab {
+	background: transparent;
+	border: none;
+	padding: 0.55rem 0.9rem;
+	font-size: 0.92rem;
+	font-weight: 600;
+	color: #6b7280;
+	cursor: pointer;
+	border-bottom: 3px solid transparent;
+	margin-bottom: -1px;
+}
+
+.sub-tab:hover { color: #0a4f90; }
+.sub-tab.is-active { color: #0a4f90; border-bottom-color: #0a4f90; }
+
+.sub-blast-card {
+	background: #f4f8fc;
+	border: 1px solid #c5d5e8;
+	border-radius: 8px;
+	padding: 1rem 1.25rem;
+	margin-bottom: 1.25rem;
+}
+
+.sub-blast-card h3 {
+	color: #0a4f90;
+	margin: 0 0 0.75rem;
+	font-size: 1.05rem;
+}
+
 /* ─── Public Events / Announcements list pages ──────────────────────────────── */
 
 .pub-list-page {

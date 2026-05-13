@@ -35,6 +35,9 @@ export default function DashboardPage() {
             <NavLink to="/dashboard/events" className={({ isActive }) => `dash-nav-link${isActive ? ' active' : ''}`}>
               <span className="dash-nav-icon">&#128197;</span> Events
             </NavLink>
+            <NavLink to="/dashboard/subscribers" className={({ isActive }) => `dash-nav-link${isActive ? ' active' : ''}`}>
+              <span className="dash-nav-icon">&#128231;</span> eNotify Subscribers
+            </NavLink>
           </div>
 
           <div className="dash-nav-section">

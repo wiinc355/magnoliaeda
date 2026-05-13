@@ -182,3 +182,52 @@ export function getPublicAnnouncements() {
 export function getPublicBuildingAddresses() {
   return apiRequest('/api/public/building-addresses');
 }
+
+// ─── eNotify (public) ─────────────────────────────────────────────────────────
+
+export function subscribeEnotify(data) {
+  return apiRequest('/api/public/enotify/subscribe', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+}
+
+export function confirmEnotify(token) {
+  return apiRequest(`/api/public/enotify/confirm/${encodeURIComponent(token)}`);
+}
+
+export function unsubscribeEnotify(token) {
+  return apiRequest(`/api/public/enotify/unsubscribe/${encodeURIComponent(token)}`);
+}
+
+export function getEnotifyCategories() {
+  return apiRequest('/api/public/enotify/categories');
+}
+
+// ─── Subscribers (admin) ──────────────────────────────────────────────────────
+
+export function getSubscribers() {
+  return apiRequest('/api/cms/subscribers');
+}
+
+export function updateSubscriber(id, data) {
+  return apiRequest(`/api/cms/subscribers/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  });
+}
+
+export function deleteSubscriber(id) {
+  return apiRequest(`/api/cms/subscribers/${id}`, { method: 'DELETE' });
+}
+
+export function getNotificationsLog(limit = 200) {
+  return apiRequest(`/api/cms/notifications-log?limit=${limit}`);
+}
+
+export function sendBlast(data) {
+  return apiRequest('/api/cms/blast', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+}

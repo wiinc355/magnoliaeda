@@ -13,6 +13,7 @@ import CityHome from './pages/CityHome';
 import CalendarPage from './pages/CalendarPage';
 import EventsPage from './pages/EventsPage';
 import AnnouncementsPage from './pages/AnnouncementsPage';
+import { EnotifySubscribePage, EnotifyConfirmPage, EnotifyUnsubscribePage } from './pages/EnotifyPage';
 import ContentPage from './pages/ContentPage';
 import SearchPage from './pages/SearchPage';
 import PoliceDept from './pages/PoliceDept';
@@ -32,6 +33,7 @@ import ProjectsManager from './pages/dashboard/ProjectsManager';
 import PersonnelManager from './pages/dashboard/PersonnelManager';
 import BuildingAddressesManager from './pages/dashboard/BuildingAddressesManager';
 import ProfilesManager from './pages/dashboard/ProfilesManager';
+import SubscribersManager from './pages/dashboard/SubscribersManager';
 
 function App() {
   return (
@@ -71,6 +73,7 @@ function App() {
                   <Route path="personnel" element={<PersonnelManager />} />
                   <Route path="building-addresses" element={<BuildingAddressesManager />} />
                   <Route path="profiles" element={<ProfilesManager />} />
+                  <Route path="subscribers" element={<SubscribersManager />} />
                 </Route>
                 <Route
                   path="/admin-portal"
@@ -119,7 +122,10 @@ function App() {
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/events" element={<EventsPage />} />
                 <Route path="/announcements" element={<AnnouncementsPage />} />
-                <Route path="/alerts/enotify" element={<ContentPage pageKey="enotify" />} />
+                <Route path="/enotify" element={<EnotifySubscribePage />} />
+                <Route path="/enotify/confirm/:token" element={<EnotifyConfirmPage />} />
+                <Route path="/enotify/unsubscribe/:token" element={<EnotifyUnsubscribePage />} />
+                <Route path="/alerts/enotify" element={<EnotifySubscribePage />} />
                 <Route path="/how-do-i/contact-us" element={<ContentPage pageKey="contactUs" />} />
                 <Route path="/search" element={<SearchPage />} />
               </Routes>

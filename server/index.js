@@ -9,6 +9,8 @@ const projectsRoutes = require('./routes/projects');
 const contactsRoutes = require('./routes/contacts');
 const cmsRoutes = require('./routes/cms');
 const uploadRoutes = require('./routes/upload');
+const enotifyRoutes = require('./routes/enotify');
+const subscribersRoutes = require('./routes/subscribers');
 const authRoutes = require('./routes/auth');
 const secureRoutes = require('./routes/secure');
 const publicDataRoutes = require('./routes/publicData');
@@ -101,6 +103,7 @@ app.get('/health', (req, res) => {
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/public', publicDataRoutes);
+app.use('/api/public/enotify', enotifyRoutes);
 app.use('/api/secure', secureRoutes);
 app.use(
   '/api/cms',
@@ -113,6 +116,12 @@ app.use(
   requireAuth,
   requireAnyRole(['Admin', 'Staff']),
   uploadRoutes
+);
+app.use(
+  '/api/cms',
+  requireAuth,
+  requireAnyRole(['Admin', 'Staff']),
+  subscribersRoutes
 );
 app.use(
   '/api/projects',
