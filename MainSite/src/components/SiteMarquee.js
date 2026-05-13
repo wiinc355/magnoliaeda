@@ -38,32 +38,34 @@ export default function SiteMarquee() {
   const bg = settings.background_color || '#0a4f90';
   const fg = settings.text_color || '#ffffff';
 
-  // Duplicate items so the loop is seamless (translateX -50%)
-  const items = data.messages.concat(data.messages);
+  // Single pass per loop so the next cycle starts only after the final word exits left.
+  const items = data.messages;
 
   return (
     <div className="site-marquee" style={{ background: bg, color: fg }}
          onMouseEnter={() => setPaused(true)}
          onMouseLeave={() => setPaused(false)}
          role="region" aria-label="City announcements">
-      <div className="site-marquee-track" style={{ animationDuration: `${duration}s`, animationPlayState: paused ? 'paused' : 'running' }}>
-        {items.map((m, idx) => {
-          const content = (
-            <span className="site-marquee-item" key={`${m.id}-${idx}`}>
-              <span className="site-marquee-dot" aria-hidden="true">•</span>
-              <span className="site-marquee-text">{m.text}</span>
-            </span>
-          );
-          if (m.link_url) {
-            const isExternal = /^https?:\/\//i.test(m.link_url);
-            return isExternal ? (
-              <a key={`l-${m.id}-${idx}`} href={m.link_url} target="_blank" rel="noreferrer" className="site-marquee-link" style={{ color: fg }}>{content}</a>
-            ) : (
-              <Link key={`l-${m.id}-${idx}`} to={m.link_url} className="site-marquee-link" style={{ color: fg }}>{content}</Link>
+      <div className="site-marquee-window">
+        <div className="site-marquee-track" style={{ animationDuration: `${duration}s`, animationPlayState: paused ? 'paused' : 'running' }}>
+          {items.map((m, idx) => {
+            const content = (
+              <span className="site-marquee-item" key={`${m.id}-${idx}`}>
+                <span className="site-marquee-dot" aria-hidden="true">•</span>
+                <span className="site-marquee-text">{m.text}</span>
+              </span>
             );
-          }
-          return content;
-        })}
+            if (m.link_url) {
+              const isExternal = /^https?:\/\//i.test(m.link_url);
+              return isExternal ? (
+                <a key={`l-${m.id}-${idx}`} href={m.link_url} target="_blank" rel="noreferrer" className="site-marquee-link" style={{ color: fg }}>{content}</a>
+              ) : (
+                <Link key={`l-${m.id}-${idx}`} to={m.link_url} className="site-marquee-link" style={{ color: fg }}>{content}</Link>
+              );
+            }
+            return content;
+          })}
+        </div>
       </div>
     </div>
   );

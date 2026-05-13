@@ -4437,7 +4437,6 @@
 
 .site-marquee {
 	position: relative;
-	overflow: hidden;
 	white-space: nowrap;
 	padding: 0.45rem 0;
 	font-size: 0.95rem;
@@ -4445,6 +4444,30 @@
 	border-bottom: 1px solid rgba(255,255,255,0.15);
 	cursor: default;
 	user-select: none;
+	overflow: hidden;
+}
+
+.site-marquee-window {
+	--site-marquee-left-cutoff: clamp(14rem, 24vw, 21rem);
+	--site-marquee-right-cutoff: clamp(8rem, 16vw, 12rem);
+	--site-marquee-fade: 48px;
+	overflow: hidden;
+	margin-left: var(--site-marquee-left-cutoff);
+	margin-right: var(--site-marquee-right-cutoff);
+	mask-image: linear-gradient(
+		to right,
+		transparent 0,
+		black var(--site-marquee-fade),
+		black calc(100% - var(--site-marquee-fade)),
+		transparent 100%
+	);
+	-webkit-mask-image: linear-gradient(
+		to right,
+		transparent 0,
+		black var(--site-marquee-fade),
+		black calc(100% - var(--site-marquee-fade)),
+		transparent 100%
+	);
 }
 
 .site-marquee-track {
@@ -4458,7 +4481,7 @@
 
 @keyframes site-marquee-scroll {
 	from { transform: translateX(0); }
-	to   { transform: translateX(-50%); }
+	to   { transform: translateX(-100%); }
 }
 
 .site-marquee-item {
@@ -4490,6 +4513,14 @@
 	.site-marquee-track { animation: none !important; }
 	.site-marquee { white-space: normal; }
 	.site-marquee-item { display: inline-block; margin: 0 1rem; }
+}
+
+@media (max-width: 1024px) {
+	.site-marquee-window {
+		--site-marquee-left-cutoff: clamp(1rem, 4vw, 2rem);
+		--site-marquee-right-cutoff: clamp(1rem, 4vw, 2rem);
+		--site-marquee-fade: 28px;
+	}
 }
 
 /* ─── Marquee Manager (dashboard) ──────────────────────────────────────────── */
