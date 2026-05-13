@@ -4,7 +4,6 @@ import './App.css';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
-import SiteMarquee from './components/SiteMarquee';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { AuthProvider } from './auth/AuthContext';
 import ProtectedRoute from './auth/ProtectedRoute';
@@ -44,7 +43,6 @@ function App() {
         <Router>
           <div id="page" className="site">
             <Header />
-            <SiteMarquee />
             <main id="content" className="site-content">
               <Routes>
                 <Route path="/" element={<CityHome />} />

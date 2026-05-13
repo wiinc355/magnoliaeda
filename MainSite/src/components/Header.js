@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import MunicipalIcon from './MunicipalIcon';
+import SiteMarquee from './SiteMarquee';
 import logoImage from '../image/COM-Logo2026A.png';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAuth } from '../auth/AuthContext';
@@ -9,7 +10,6 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { language, setLanguage, isSpanish } = useLanguage();
   const { isAuthenticated, hasAnyRole, loginRedirect, logout } = useAuth();
-  const marqueeText = 'Welcome to the City of Magnolis MS';
 
   const text = isSpanish ? {
     utilityAria: 'Herramientas de redes sociales e idioma',
@@ -197,14 +197,7 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="municipal-marquee-billboard" role="status" aria-live="polite" aria-label="City notice ticker">
-        <div className="municipal-marquee-window">
-          <div className="municipal-marquee-track">
-            <div className="municipal-marquee-text">{marqueeText}</div>
-            <div className="municipal-marquee-text" aria-hidden="true">{marqueeText}</div>
-          </div>
-        </div>
-      </div>
+      <SiteMarquee />
 
       {isAuthenticated ? (
         <nav className="municipal-portal-bar" aria-label="Portal navigation">
