@@ -76,8 +76,8 @@ export default function SitesBuildings() {
             <h4 style={{ color: '#0a4f90', marginBottom: '.5rem' }}>Contact Us About Available Sites</h4>
             <p style={{ margin: 0 }}>
               For more information about available sites and buildings, please contact the
-              Magnolia EDA:<br /><br />
-              <strong>Magnolia Economic Development Authority</strong><br />
+              Magnolia MEDC:<br /><br />
+              <strong>Magnolia Economic Development Committee</strong><br />
               115 West Bay Street • Magnolia, MS 39652<br />
               (601) 876-5678 • <a href="mailto:eda@cityofmagnolia-ms.gov">eda@cityofmagnolia-ms.gov</a>
             </p>

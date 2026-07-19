@@ -21,12 +21,19 @@ export default function Maps() {
         <div className="container">
 
           <h4>Regional Location Map</h4>
-          <div className="map-placeholder">
-            📍 Interactive map coming soon<br />
-            <span style={{ fontSize: '.85rem', marginTop: '.5rem', display: 'block' }}>
-              Magnolia, MS • Pike County • Lat: 31.1298° N, Lon: 90.4579° W
-            </span>
+          <div style={{ borderRadius: 4, overflow: 'hidden', border: '1px solid #ddd' }}>
+            <iframe
+              title="Magnolia MS Regional Location Map"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-90.6337%2C31.0198%2C-90.2821%2C31.2398&layer=mapnik&marker=31.1298%2C-90.4579"
+              width="100%"
+              height="400"
+              style={{ border: 0, display: 'block' }}
+              loading="lazy"
+            />
           </div>
+          <p style={{ fontSize: '.85rem', marginTop: '.5rem', color: '#666' }}>
+            Magnolia, MS • Pike County • Lat: 31.1298° N, Lon: 90.4579° W
+          </p>
 
           <h4>Google Maps</h4>
           <div style={{ borderRadius: 4, overflow: 'hidden', border: '1px solid #ddd' }}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import Header from './components/Header';
@@ -76,7 +76,8 @@ function App() {
                   <Route path="building-addresses" element={<BuildingAddressesManager />} />
                   <Route path="profiles" element={<ProfilesManager />} />
                   <Route path="subscribers" element={<SubscribersManager />} />
-                  <Route path="marquee" element={<MarqueeManager />} />
+                  <Route path="marquee" element={<Navigate to="/dashboard/marquee/mainsite" replace />} />
+                  <Route path="marquee/:siteKey" element={<MarqueeManager />} />
                 </Route>
                 <Route
                   path="/admin-portal"

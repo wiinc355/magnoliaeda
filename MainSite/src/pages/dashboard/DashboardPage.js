@@ -38,8 +38,11 @@ export default function DashboardPage() {
             <NavLink to="/dashboard/subscribers" className={({ isActive }) => `dash-nav-link${isActive ? ' active' : ''}`}>
               <span className="dash-nav-icon">&#128231;</span> eNotify Subscribers
             </NavLink>
-            <NavLink to="/dashboard/marquee" className={({ isActive }) => `dash-nav-link${isActive ? ' active' : ''}`}>
-              <span className="dash-nav-icon">&#128227;</span> Site Marquee
+            <NavLink to="/dashboard/marquee/mainsite" className={({ isActive }) => `dash-nav-link${isActive ? ' active' : ''}`}>
+              <span className="dash-nav-icon">&#128227;</span> MainSite Marquee
+            </NavLink>
+            <NavLink to="/dashboard/marquee/ecodevsite" className={({ isActive }) => `dash-nav-link${isActive ? ' active' : ''}`}>
+              <span className="dash-nav-icon">&#128227;</span> EcodevSite Marquee
             </NavLink>
           </div>
 

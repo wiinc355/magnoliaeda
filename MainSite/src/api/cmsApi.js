@@ -204,6 +204,13 @@ export function getEnotifyCategories() {
   return apiRequest('/api/public/enotify/categories');
 }
 
+export function findEnotifySubscription(identifier) {
+  return apiRequest('/api/public/enotify/manage/find', {
+    method: 'POST',
+    body: JSON.stringify({ identifier })
+  });
+}
+
 // ─── Subscribers (admin) ──────────────────────────────────────────────────────
 
 export function getSubscribers() {
@@ -253,39 +260,39 @@ export function sendBlast(data) {
 
 // ─── Marquee (public + admin) ────────────────────────────────────────────────
 
-export function getPublicMarquee() {
-  return apiRequest('/api/public/marquee');
+export function getPublicMarquee(site = 'mainsite') {
+  return apiRequest(`/api/public/marquee?site=${encodeURIComponent(site)}`);
 }
 
-export function getMarqueeSettings() {
-  return apiRequest('/api/cms/marquee-settings');
+export function getMarqueeSettings(site = 'mainsite') {
+  return apiRequest(`/api/cms/marquee-settings?site=${encodeURIComponent(site)}`);
 }
 
-export function updateMarqueeSettings(data) {
-  return apiRequest('/api/cms/marquee-settings', {
+export function updateMarqueeSettings(data, site = 'mainsite') {
+  return apiRequest(`/api/cms/marquee-settings?site=${encodeURIComponent(site)}`, {
     method: 'PUT',
     body: JSON.stringify(data)
   });
 }
 
-export function getMarqueeMessages() {
-  return apiRequest('/api/cms/marquee-messages');
+export function getMarqueeMessages(site = 'mainsite') {
+  return apiRequest(`/api/cms/marquee-messages?site=${encodeURIComponent(site)}`);
 }
 
-export function createMarqueeMessage(data) {
-  return apiRequest('/api/cms/marquee-messages', {
+export function createMarqueeMessage(data, site = 'mainsite') {
+  return apiRequest(`/api/cms/marquee-messages?site=${encodeURIComponent(site)}`, {
     method: 'POST',
     body: JSON.stringify(data)
   });
 }
 
-export function updateMarqueeMessage(id, data) {
-  return apiRequest(`/api/cms/marquee-messages/${id}`, {
+export function updateMarqueeMessage(id, data, site = 'mainsite') {
+  return apiRequest(`/api/cms/marquee-messages/${id}?site=${encodeURIComponent(site)}`, {
     method: 'PUT',
     body: JSON.stringify(data)
   });
 }
 
-export function deleteMarqueeMessage(id) {
-  return apiRequest(`/api/cms/marquee-messages/${id}`, { method: 'DELETE' });
+export function deleteMarqueeMessage(id, site = 'mainsite') {
+  return apiRequest(`/api/cms/marquee-messages/${id}?site=${encodeURIComponent(site)}`, { method: 'DELETE' });
 }

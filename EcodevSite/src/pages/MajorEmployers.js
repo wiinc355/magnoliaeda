@@ -56,15 +56,15 @@ export default function MajorEmployers() {
             </tbody>
           </table>
           <p style={{ fontSize: '.8rem', color: '#777' }}>
-            Source: Magnolia Economic Development Authority (estimates) — actual figures may vary.
+            Source: Magnolia Economic Development Committee (estimates) — actual figures may vary.
             Contact us for up-to-date employer information.
           </p>
 
           <div style={{ background: '#f8f8f6', padding: '1.25rem', borderLeft: '4px solid #b5811a', marginTop: '1.5rem', borderRadius: 2 }}>
             <p style={{ margin: 0 }}>
-              <strong>Join our growing employer community.</strong> Contact the Magnolia EDA
+              <strong>Join our growing employer community.</strong> Contact the Magnolia MEDC
               to learn why businesses thrive in Magnolia, Mississippi.{' '}
-              <a href="mailto:eda@cityofmagnolia.com">eda@cityofmagnolia.com</a>
+              <a href="mailto:eda@cityofmagnolia-ms.gov">eda@cityofmagnolia-ms.gov</a>
             </p>
           </div>
         </div>

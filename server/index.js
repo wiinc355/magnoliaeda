@@ -40,7 +40,7 @@ function isEntraConfigured() {
 }
 
 const PgSessionStore = connectPgSimple(session);
-const frontendOrigins = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000')
+const frontendOrigins = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000,http://localhost:3001')
   .split(',')
   .map((origin) => origin.trim())
   .filter(Boolean);
@@ -59,7 +59,11 @@ const sessionConfig = {
   }
 };
 
-if (pool) {
+const usePgSessionStore = Boolean(pool) && (
+  isProduction || String(process.env.USE_PG_SESSION_STORE || '').toLowerCase() === 'true'
+);
+
+if (usePgSessionStore) {
   sessionConfig.store = new PgSessionStore({
     pool,
     tableName: 'user_sessions',

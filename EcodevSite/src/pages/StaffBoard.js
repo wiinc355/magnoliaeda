@@ -25,7 +25,7 @@ export default function StaffBoard() {
         <div className="container">
           <h3>Our Team</h3>
           <p>
-            The Magnolia EDA is staffed by dedicated professionals committed to the economic
+            The Magnolia MEDC is staffed by dedicated professionals committed to the economic
             growth of Magnolia and Pike County, Mississippi.
           </p>
         </div>
@@ -62,7 +62,7 @@ export default function StaffBoard() {
             <h4 style={{ color: '#2d6a4f', marginBottom: '.5rem' }}>Board Meeting Minutes</h4>
             <p style={{ margin: 0, color: '#555', fontSize: '.92rem' }}>
               Board meeting minutes will be posted here as they become available.
-              For inquiries, please contact us at <a href="mailto:eda@cityofmagnolia.com">eda@cityofmagnolia.com</a>.
+              For inquiries, please contact us at <a href="mailto:eda@cityofmagnolia-ms.gov">eda@cityofmagnolia-ms.gov</a>.
             </p>
           </div>
         </div>

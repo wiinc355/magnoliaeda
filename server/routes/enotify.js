@@ -115,6 +115,50 @@ router.get('/categories', (_req, res) => {
 
 // ─── Manage Subscription (subscriber self-service) ────────────────────────────
 
+router.post('/manage/find', (req, res) => {
+  const identifier = String(req.body?.identifier || '').trim();
+  if (!identifier) return res.status(400).json({ error: 'Email or phone is required' });
+
+  try {
+    let row = null;
+
+    if (identifier.includes('@')) {
+      row = db.prepare(
+        `SELECT id, full_name, email, phone, unsubscribe_token, status
+           FROM subscribers
+          WHERE email = ? COLLATE NOCASE
+          ORDER BY id DESC
+          LIMIT 1`
+      ).get(identifier);
+    } else {
+      const inputDigits = identifier.replace(/\D/g, '');
+      if (!inputDigits) return res.status(400).json({ error: 'Enter a valid phone number' });
+
+      const rows = db.prepare(
+        `SELECT id, full_name, email, phone, unsubscribe_token, status
+           FROM subscribers
+          WHERE phone IS NOT NULL AND TRIM(phone) != ''
+          ORDER BY id DESC`
+      ).all();
+
+      row = rows.find((r) => String(r.phone || '').replace(/\D/g, '') === inputDigits) || null;
+    }
+
+    if (!row || !row.unsubscribe_token) {
+      return res.status(404).json({ error: 'No subscription profile found for that email or phone' });
+    }
+
+    return res.json({
+      success: true,
+      manage_token: row.unsubscribe_token,
+      full_name: row.full_name,
+      status: row.status
+    });
+  } catch (_) {
+    return res.status(500).json({ error: 'Failed to find subscription profile' });
+  }
+});
+
 router.get('/manage/:token', (req, res) => {
   const t = String(req.params.token || '').trim();
   if (!t) return res.status(400).json({ error: 'Missing token' });

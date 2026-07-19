@@ -62,7 +62,7 @@ export default function WageRates() {
             <p style={{ margin: 0, fontSize: '.95rem' }}>
               <strong>Note:</strong> Mississippi's minimum wage follows the federal minimum wage.
               For detailed occupational wage data specific to your industry and workforce needs,
-              contact the Magnolia EDA at <a href="mailto:eda@cityofmagnolia-ms.gov">eda@cityofmagnolia-ms.gov</a>.
+              contact the Magnolia MEDC at <a href="mailto:eda@cityofmagnolia-ms.gov">eda@cityofmagnolia-ms.gov</a>.
             </p>
           </div>
         </div>

@@ -83,40 +83,67 @@ router.get('/login', async (req, res, next) => {
         return res.redirect(`${frontendBase}/login?error=auth_not_configured`);
       }
 
-      const user = await upsertUserFromIdentity({
-        externalSub: process.env.DEV_AUTH_EXTERNAL_SUB || 'dev-local-user',
-        email: process.env.DEV_AUTH_EMAIL || 'dev@local.test',
-        displayName: process.env.DEV_AUTH_DISPLAY_NAME || 'Local Development User'
-      });
-
-      await ensureUserHasDefaultRole(user.id);
-
+      const externalSub = process.env.DEV_AUTH_EXTERNAL_SUB || 'dev-local-user';
+      const fallbackEmail = process.env.DEV_AUTH_EMAIL || 'dev@local.test';
+      const fallbackDisplayName = process.env.DEV_AUTH_DISPLAY_NAME || 'Local Development User';
       const requestedRoles = String(process.env.DEV_AUTH_ROLES || 'Admin,Staff')
         .split(',')
         .map((role) => role.trim())
         .filter(Boolean);
 
-      if (requestedRoles.length > 0) {
-        await setUserRoles({ userId: user.id, roleNames: requestedRoles, assignedBy: null });
+      let sessionUser;
+      let sessionMode = 'database';
+
+      try {
+        const user = await upsertUserFromIdentity({
+          externalSub,
+          email: fallbackEmail,
+          displayName: fallbackDisplayName
+        });
+
+        await ensureUserHasDefaultRole(user.id);
+
+        if (requestedRoles.length > 0) {
+          await setUserRoles({ userId: user.id, roleNames: requestedRoles, assignedBy: null });
+        }
+
+        const roles = await getUserRoles(user.id);
+
+        sessionUser = {
+          id: user.id,
+          externalSub,
+          email: user.email,
+          displayName: user.display_name,
+          roles,
+          isActive: user.is_active
+        };
+      } catch (error) {
+        sessionMode = 'session_only';
+
+        logSecurityEvent('auth.login.dev_fallback_session_only', {
+          reason: 'auth_storage_unavailable',
+          message: error && error.message ? error.message : 'Unknown auth storage error',
+          ip: req.ip
+        });
+
+        sessionUser = {
+          id: null,
+          externalSub,
+          email: fallbackEmail,
+          displayName: fallbackDisplayName,
+          roles: requestedRoles.length > 0 ? requestedRoles : ['Admin', 'Staff'],
+          isActive: true
+        };
       }
 
-      const roles = await getUserRoles(user.id);
-
       await regenerateSession(req);
-      req.session.user = {
-        id: user.id,
-        externalSub: process.env.DEV_AUTH_EXTERNAL_SUB || 'dev-local-user',
-        email: user.email,
-        displayName: user.display_name,
-        roles,
-        isActive: user.is_active
-      };
+      req.session.user = sessionUser;
 
       await writeAuditLog({
-        actorUserId: user.id,
+        actorUserId: sessionUser.id,
         action: 'auth.login.dev_fallback',
         outcome: 'success',
-        metadata: { roles, returnTo },
+        metadata: { roles: sessionUser.roles, returnTo, sessionMode },
         ...getRequestMeta(req)
       }).catch(() => {});
 

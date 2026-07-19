@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { PageBanner } from '../components/PageBanner';
 import {
-  subscribeEnotify, confirmEnotify, unsubscribeEnotify, getEnotifyCategories
+  subscribeEnotify, confirmEnotify, unsubscribeEnotify, getEnotifyCategories, findEnotifySubscription
 } from '../api/cmsApi';
 import bannerImg from '../image/hero-1.png';
 
@@ -54,10 +54,15 @@ export function EnotifySubscribePage() {
     full_name: '', email: '', phone: '',
     channels: ['email'], categories: []
   });
+  const [lookupOpen, setLookupOpen] = useState(false);
+  const [lookupValue, setLookupValue] = useState('');
+  const [lookupError, setLookupError] = useState(null);
+  const [lookupSubmitting, setLookupSubmitting] = useState(false);
   const [availCats, setAvailCats] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getEnotifyCategories()
@@ -97,6 +102,23 @@ export function EnotifySubscribePage() {
     }
   }
 
+  async function onLookupSubmit(e) {
+    e.preventDefault();
+    setLookupError(null);
+    setLookupSubmitting(true);
+    try {
+      const res = await findEnotifySubscription(lookupValue);
+      if (!res?.manage_token) {
+        throw new Error('Profile found, but manage link could not be created.');
+      }
+      navigate(`/enotify/manage/${encodeURIComponent(res.manage_token)}`);
+    } catch (err) {
+      setLookupError(err.message || 'No profile found for that email or phone number.');
+    } finally {
+      setLookupSubmitting(false);
+    }
+  }
+
   return (
     <div>
       <PageBanner title="" images={[bannerImg]} height={180} />
@@ -112,7 +134,37 @@ export function EnotifySubscribePage() {
               categories you care about and the channels you want messages on.
               You will receive a confirmation link to activate your subscription.
             </p>
+            <button
+              type="button"
+              className="enotify-link"
+              style={{ border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', fontWeight: 700 }}
+              onClick={() => {
+                setLookupOpen((v) => !v);
+                setLookupError(null);
+              }}
+            >
+              Previous user? Manage your profile by email or phone.
+            </button>
           </div>
+
+          {lookupOpen && (
+            <form className="enotify-card enotify-form" onSubmit={onLookupSubmit}>
+              <div className="enotify-row">
+                <label>Email or Mobile Phone <span className="enotify-req">*</span></label>
+                <input
+                  type="text"
+                  required
+                  value={lookupValue}
+                  onChange={(e) => setLookupValue(e.target.value)}
+                  placeholder="name@example.com or (601) 555-0123"
+                />
+              </div>
+              {lookupError && <p className="enotify-error">{lookupError}</p>}
+              <button type="submit" className="enotify-submit" disabled={lookupSubmitting}>
+                {lookupSubmitting ? 'Finding profile…' : 'Open Profile Manager'}
+              </button>
+            </form>
+          )}
 
           {submitted ? (
             <div className="enotify-card enotify-success">

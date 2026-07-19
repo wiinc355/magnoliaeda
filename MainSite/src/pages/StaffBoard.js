@@ -25,7 +25,7 @@ export default function StaffBoard() {
         <div className="container">
           <h3>Our Team</h3>
           <p>
-            The Magnolia EDA is staffed by dedicated professionals committed to the economic
+            The Magnolia MEDC is staffed by dedicated professionals committed to the economic
             growth of Magnolia and Pike County, Mississippi.
           </p>
         </div>

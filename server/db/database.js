@@ -112,7 +112,10 @@ db.exec(`
 db.exec(`
   CREATE TABLE IF NOT EXISTS marquee_messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    site_key TEXT NOT NULL DEFAULT 'mainsite',
     text TEXT NOT NULL,
+    rich_text TEXT DEFAULT '',
+    text_style_json TEXT DEFAULT '{}',
     link_url TEXT DEFAULT '',
     is_active INTEGER DEFAULT 1,
     sort_order INTEGER DEFAULT 0,
@@ -122,6 +125,14 @@ db.exec(`
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   )
 `);
+
+['site_key TEXT NOT NULL DEFAULT \'mainsite\'', 'rich_text TEXT DEFAULT \'\'', 'text_style_json TEXT DEFAULT \'{}\''].forEach((decl) => {
+  try { db.exec(`ALTER TABLE marquee_messages ADD COLUMN ${decl}`); } catch (_) {}
+});
+
+try {
+  db.exec(`UPDATE marquee_messages SET site_key = 'mainsite' WHERE site_key IS NULL OR TRIM(site_key) = ''`);
+} catch (_) {}
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS marquee_settings (
@@ -134,6 +145,57 @@ db.exec(`
   )
 `);
 db.prepare(`INSERT OR IGNORE INTO marquee_settings (id) VALUES (1)`).run();
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS marquee_site_settings (
+    site_key TEXT PRIMARY KEY,
+    is_enabled INTEGER DEFAULT 1,
+    duration_seconds INTEGER DEFAULT 40,
+    background_color TEXT DEFAULT '#0a4f90',
+    text_color TEXT DEFAULT '#ffffff',
+    font_weight TEXT DEFAULT 'normal',
+    font_size_px INTEGER DEFAULT 15,
+    text_decoration TEXT DEFAULT 'none',
+    text_transform TEXT DEFAULT 'none',
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+db.prepare(
+  `INSERT OR IGNORE INTO marquee_site_settings
+   (site_key, is_enabled, duration_seconds, background_color, text_color, font_weight, font_size_px, text_decoration, text_transform)
+   VALUES ('mainsite', 1, 40, '#0a4f90', '#ffffff', 'normal', 15, 'none', 'none')`
+).run();
+
+db.prepare(
+  `INSERT OR IGNORE INTO marquee_site_settings
+   (site_key, is_enabled, duration_seconds, background_color, text_color, font_weight, font_size_px, text_decoration, text_transform)
+   VALUES ('ecodevsite', 1, 40, '#dff0d8', '#173f68', 'normal', 15, 'none', 'none')`
+).run();
+
+try {
+  const ecodevCount = db.prepare(`SELECT COUNT(*) AS count FROM marquee_messages WHERE site_key = 'ecodevsite'`).get().count;
+  const mainsiteCount = db.prepare(`SELECT COUNT(*) AS count FROM marquee_messages WHERE site_key = 'mainsite'`).get().count;
+
+  if (ecodevCount === 0 && mainsiteCount > 0) {
+    db.prepare(
+      `INSERT INTO marquee_messages
+         (site_key, text, rich_text, text_style_json, link_url, is_active, sort_order, publish_at, expires_at, created_at, updated_at)
+       SELECT 'ecodevsite', text, rich_text, text_style_json, link_url, is_active, sort_order, publish_at, expires_at, created_at, updated_at
+       FROM marquee_messages
+       WHERE site_key = 'mainsite'`
+    ).run();
+  }
+} catch (_) {}
+
+// Font-style columns for marquee
+['font_weight TEXT DEFAULT \'normal\'',
+ 'font_size_px INTEGER DEFAULT 15',
+ 'text_decoration TEXT DEFAULT \'none\'',
+ 'text_transform TEXT DEFAULT \'none\''
+].forEach((decl) => {
+  try { db.exec(`ALTER TABLE marquee_settings ADD COLUMN ${decl}`); } catch (_) {}
+});
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS subscribers (

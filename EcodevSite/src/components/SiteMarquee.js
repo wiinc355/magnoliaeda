@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { getPublicMarquee } from '../api/cmsApi';
+import { getPublicMarquee } from '../api/marqueeApi';
 
 function sanitizeRichHtml(rawHtml) {
   const html = String(rawHtml || '');
@@ -34,7 +34,7 @@ export default function SiteMarquee() {
   const location = useLocation();
 
   function fetchOnce() {
-    return getPublicMarquee('mainsite')
+    return getPublicMarquee()
       .then((d) => setData(d))
       .catch(() => setData({ enabled: false, messages: [] }));
   }
@@ -43,7 +43,7 @@ export default function SiteMarquee() {
     let cancelled = false;
 
     function safeFetch() {
-      getPublicMarquee('mainsite')
+      getPublicMarquee()
         .then((d) => { if (!cancelled) setData(d); })
         .catch(() => { if (!cancelled) setData({ enabled: false, messages: [] }); });
     }
@@ -75,23 +75,12 @@ export default function SiteMarquee() {
     fetchOnce();
   }, [location.pathname]);
 
-  // Hide on portal / auth pages — admin UX. Dashboard still shows the marquee.
-  const path = location.pathname || '';
-  if (path.startsWith('/admin-portal')
-      || path.startsWith('/staff-portal')
-      || path.startsWith('/department-portal')
-      || path.startsWith('/profile')
-      || path.startsWith('/login')
-      || path.startsWith('/auth/')) {
-    return null;
-  }
-
   if (!data || !data.enabled || !data.messages || data.messages.length === 0) return null;
 
   const settings = data.settings || {};
   const duration = Math.max(5, Math.min(240, Number(settings.duration_seconds) || 40));
-  const bg = settings.background_color || '#0a4f90';
-  const fg = settings.text_color || '#ffffff';
+  const bg = settings.background_color || '#dff0d8';
+  const fg = settings.text_color || '#173f68';
   const fontWeight = settings.font_weight === 'bold' ? 700 : 500;
   const fontSize = Math.max(10, Math.min(40, parseInt(settings.font_size_px, 10) || 15));
   const textDecoration = settings.text_decoration === 'underline' ? 'underline' : 'none';
@@ -99,15 +88,17 @@ export default function SiteMarquee() {
     ? settings.text_transform
     : 'none';
 
-  // Single pass per loop so the next cycle starts only after the final word exits left.
   const items = data.messages;
 
   return (
-    <div className="site-marquee"
-         style={{ background: bg, color: fg, fontWeight, fontSize: `${fontSize}px`, textDecoration, textTransform }}
-         onMouseEnter={() => setPaused(true)}
-         onMouseLeave={() => setPaused(false)}
-         role="region" aria-label="City announcements">
+    <div
+      className="site-marquee"
+      style={{ background: bg, color: fg, fontWeight, fontSize: `${fontSize}px`, textDecoration, textTransform }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      role="region"
+      aria-label="Economic development announcements"
+    >
       <div className="site-marquee-window">
         <div className="site-marquee-track" style={{ animationDuration: `${duration}s`, animationPlayState: paused ? 'paused' : 'running' }}>
           {items.map((m, idx) => {
@@ -133,6 +124,7 @@ export default function SiteMarquee() {
                 )}
               </span>
             );
+
             if (m.link_url) {
               const isExternal = /^https?:\/\//i.test(m.link_url);
               return isExternal ? (

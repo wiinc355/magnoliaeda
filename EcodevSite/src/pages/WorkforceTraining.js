@@ -59,7 +59,7 @@ export default function WorkforceTraining() {
 
           <h4>Customized Training</h4>
           <p>
-            The Magnolia EDA works directly with new and expanding industries to develop
+            The Magnolia MEDC works directly with new and expanding industries to develop
             customized pre-employment and on-the-job training programs. We coordinate with
             SMCC, MDA, and the WIN Job Center to ensure your workforce is trained and ready
             before your facility opens.
@@ -69,7 +69,7 @@ export default function WorkforceTraining() {
             <h4 style={{ color: '#2d6a4f', marginBottom: '.5rem' }}>Contact Us About Workforce Solutions</h4>
             <p style={{ margin: 0 }}>
               Let us build a customized workforce solution for your business.
-              Contact the Magnolia EDA at <a href="mailto:eda@cityofmagnolia.com">eda@cityofmagnolia.com</a> or
+              Contact the Magnolia MEDC at <a href="mailto:eda@cityofmagnolia-ms.gov">eda@cityofmagnolia-ms.gov</a> or
               call <a href="tel:+16018765678">(601) 876-5678</a>.
             </p>
           </div>

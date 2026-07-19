@@ -8,11 +8,11 @@ export default function Overview() {
 
       <section className="content-section first-section">
         <div className="container">
-          <h3>Magnolia Economic Development Authority (EDA)</h3>
+          <h3>Magnolia Economic Development Committee (MEDC)</h3>
           <div className="text-wrapper">
             <p>
               The <strong className="italic" style={{ fontStyle: 'italic', color: '#b5811a' }}>
-                Magnolia Economic Development Authority (EDA)
+                Magnolia Economic Development Committee (MEDC)
               </strong> is your investment partner, with tailored resources and programs that support
               business investment and job growth in Magnolia and Pike County, Mississippi. The
               economic impact is clear. We believe in Magnolia, and so do the businesses making
@@ -28,7 +28,7 @@ export default function Overview() {
             <div className="col-text">
               <h4>Our Mission</h4>
               <p>
-                The Magnolia EDA works to attract, retain, and expand businesses and industries
+                The Magnolia MEDC works to attract, retain, and expand businesses and industries
                 in Magnolia, Mississippi. We serve as a catalyst for economic growth by providing
                 technical assistance, connecting businesses with available incentives, and
                 marketing the community's competitive advantages.

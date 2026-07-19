@@ -1,17 +1,18 @@
 import React from 'react';
 import { PageBanner } from '../components/PageBanner';
+import incentivesTaxesBanner from '../assets/COM-IncentiveTaxes2.jpg';
 
 export default function IncentivesTaxes() {
   return (
     <div>
-      <PageBanner title="Incentives &amp; Taxes" />
+      <PageBanner title="Incentives &amp; Taxes" image={incentivesTaxesBanner} height={250} />
 
       <section className="content-section first-section">
         <div className="container">
           <h3>Full-Bodied Incentives</h3>
           <div className="text-wrapper">
             <p>
-              The <strong>Magnolia EDA</strong> aggressively pursues federal, state, and local
+              The <strong>Magnolia MEDC</strong> aggressively pursues federal, state, and local
               incentives to make the cost of relocating and operating your business extremely
               competitive. We will work with your company to identify the most beneficial tax,
               financing, development, and training incentives available.
@@ -53,7 +54,7 @@ export default function IncentivesTaxes() {
 
           <h4>Local Incentives</h4>
           <p>
-            The Magnolia EDA and Pike County can provide a wealth of local incentives tailored
+            The Magnolia MEDC and Pike County can provide a wealth of local incentives tailored
             to your project, including:
           </p>
           <ul>
@@ -82,11 +83,11 @@ export default function IncentivesTaxes() {
               </tr>
               <tr>
                 <td>City of Magnolia Property Tax (millage)</td>
-                <td>Contact EDA</td>
+                <td>Contact MEDC</td>
               </tr>
               <tr>
                 <td>Pike County Property Tax (millage)</td>
-                <td>Contact EDA</td>
+                <td>Contact MEDC</td>
               </tr>
             </tbody>
           </table>

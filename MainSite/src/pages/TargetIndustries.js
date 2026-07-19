@@ -70,7 +70,7 @@ export default function TargetIndustries() {
 
           <div style={{ background: '#eaf2fb', padding: '1.5rem', borderRadius: 4, marginTop: '2rem' }}>
             <p style={{ margin: 0 }}>
-              <strong>Interested in locating in Magnolia?</strong> Contact the Magnolia EDA to
+              <strong>Interested in locating in Magnolia?</strong> Contact the Magnolia MEDC to
               discuss your project and learn how we can help make it a success.{' '}
               <a href="mailto:eda@cityofmagnolia-ms.gov">eda@cityofmagnolia-ms.gov</a> •{' '}
               <a href="tel:+16018765678">(601) 876-5678</a>

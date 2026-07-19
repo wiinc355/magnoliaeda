@@ -1,1 +1,1639 @@
 @import 'shared-site-styles/site.css';
+
+.eda-header {
+	position: sticky;
+	top: 0;
+	z-index: 1200;
+	background: #fff;
+}
+
+.eda-header .header-top {
+	background: #fff;
+	border-bottom: 1px solid #e4e8ee;
+	padding-bottom: 0;
+}
+
+.eda-header .header-top .container,
+.eda-header .header-top .inner {
+	background: #fff;
+}
+
+.eda-main-inner {
+	gap: 1.15rem;
+	padding-top: 0.12rem;
+	padding-bottom: 0.55rem;
+	position: relative;
+}
+
+.eda-site-menu {
+	margin-left: auto;
+	background: #fff;
+	border-left: 1px solid #edf1f5;
+	padding-left: 0.75rem;
+}
+
+.eda-site-menu > ul {
+	list-style: none;
+	margin: 0;
+	display: flex;
+	gap: 0;
+	align-items: flex-end;
+}
+
+.eda-site-menu > ul > li {
+	position: relative;
+	--border-width: 8px;
+}
+
+.eda-site-menu > ul > li > a {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	width: 5.67rem;
+	aspect-ratio: 1;
+	padding: 0.4rem 0.3rem;
+	font-size: 0.63rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	font-family: 'Open Sans', sans-serif;
+	text-decoration: none;
+	line-height: 1;
+	letter-spacing: 0.02em;
+	border-radius: 1.25rem;
+	border: var(--border-width) solid var(--magnolia-white);
+	transition: border-radius 0.2s linear 0.1s;
+	width: 100%;
+	min-width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.eda-site-menu > ul > li:nth-child(odd) > a {
+	background: var(--magnolia-primary);
+	color: var(--magnolia-white);
+}
+
+.eda-site-menu > ul > li:nth-child(even) > a {
+	background: var(--magnolia-tertiary);
+	color: var(--magnolia-primary);
+}
+
+.eda-site-menu > ul > li > a span {
+	display: block;
+}
+
+.eda-site-menu > ul > li:hover > a,
+.eda-site-menu > ul > li:focus-within > a {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	transition: border-radius 0.2s linear;
+}
+
+.eda-site-menu .submenu {
+	display: none;
+	position: absolute;
+	top: calc(100% - var(--border-width));
+	left: 0;
+	min-width: 160%;
+	list-style: none;
+	padding: 0.3rem 0;
+	margin: 0;
+	z-index: 999;
+	border: var(--border-width) solid var(--magnolia-white);
+	border-top: none;
+	border-radius: 0 0 1.25rem 1.25rem;
+	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+	white-space: nowrap;
+}
+
+.eda-site-menu > ul > li:nth-child(odd) .submenu {
+	background: var(--magnolia-primary);
+}
+
+.eda-site-menu > ul > li:nth-child(even) .submenu {
+	background: var(--magnolia-tertiary);
+}
+
+.eda-site-menu > ul > li:hover .submenu,
+.eda-site-menu > ul > li:focus-within .submenu {
+	display: block;
+}
+
+.eda-site-menu .submenu li a {
+	display: block;
+	padding: 0.4rem 0.83rem;
+	font-size: 0.6rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	font-family: 'Open Sans', sans-serif;
+	text-decoration: none;
+	text-align: center;
+	transition: opacity 0.15s;
+}
+
+.eda-site-menu > ul > li:nth-child(odd) .submenu li a {
+	color: var(--magnolia-white);
+}
+
+.eda-site-menu > ul > li:nth-child(even) .submenu li a {
+	color: var(--magnolia-primary);
+}
+
+.eda-site-menu > ul > li:nth-child(odd) .submenu li + li {
+	border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.eda-site-menu > ul > li:nth-child(even) .submenu li + li {
+	border-top: 1px solid rgba(45, 106, 79, 0.3);
+}
+
+.eda-site-menu .submenu li a:hover {
+	opacity: 0.75;
+}
+
+.eda-site-menu .eda-desktop-menu-list > li.has-mega-control {
+	display: inline-flex;
+	align-items: stretch;
+}
+
+.eda-nav-dropdown-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.25rem;
+	min-height: 2.25rem;
+	padding: 0;
+	border: 1px solid #edf1f5;
+	background: #fff;
+	color: #173f68;
+	cursor: pointer;
+	font-size: 0.72rem;
+	font-weight: 700;
+	border-radius: 999px;
+	transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.eda-nav-dropdown-toggle:hover,
+.eda-nav-dropdown-toggle:focus-visible,
+.eda-nav-dropdown-toggle.is-open {
+	background: #f4f8fc;
+	border-color: #d7e5f1;
+	color: #0a4f90;
+	box-shadow: 0 0 0 2px rgba(10, 79, 144, 0.08);
+	outline: none;
+}
+
+.eda-nav-dropdown-toggle span,
+.utility-submenu-toggle span {
+	display: inline-block;
+	transition: transform 0.15s ease;
+}
+
+.eda-nav-dropdown-toggle.is-open span,
+.utility-submenu-toggle[aria-expanded='true'] span {
+	transform: rotate(180deg);
+}
+
+.eda-mega-menu {
+	display: none;
+	position: absolute;
+	left: calc(var(--magnolia-gutter) * -1);
+	right: calc(var(--magnolia-gutter) * -1);
+	width: 100%;
+	top: calc(100% + 0.2rem);
+	z-index: 1400;
+}
+
+.eda-mega-menu.is-open {
+	display: block;
+}
+
+.eda-mega-menu-inner {
+	display: block;
+	width: 100%;
+	min-width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+	background: #ffffff;
+	border: 1px solid #d8e5f1;
+	border-radius: 0.75rem;
+	box-shadow: 0 14px 28px rgba(8, 37, 71, 0.16);
+	padding: 1rem;
+}
+
+.eda-mega-menu-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	align-items: start;
+	gap: 0.75rem;
+}
+
+.eda-mega-menu-column {
+	width: auto;
+	max-width: none;
+	padding: 0.75rem;
+	border-radius: 0.6rem;
+	border: 1px solid #eef3f8;
+	background: #fdfefe;
+}
+
+.eda-mega-menu-column.is-focused {
+	border-color: #c9dff3;
+	background: #f6fbff;
+}
+
+.eda-mega-menu-heading {
+	margin: 0;
+	font-size: 0.95rem;
+	line-height: 1.2;
+}
+
+.eda-mega-menu-heading a {
+	color: #173f68;
+	text-decoration: none;
+}
+
+.eda-mega-menu-heading a:hover,
+.eda-mega-menu-heading a:focus-visible {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	outline: none;
+}
+
+.eda-mega-menu-description {
+	margin: 0.45rem 0 0.65rem;
+	font-size: 0.78rem;
+	line-height: 1.35;
+	color: #466785;
+}
+
+.eda-mega-menu-links {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.3rem;
+}
+
+.eda-mega-menu-link {
+	display: block;
+	padding: 0.34rem 0.38rem;
+	border-radius: 0.35rem;
+	font-size: 0.82rem;
+	font-weight: 600;
+	text-decoration: none;
+	color: #173f68;
+}
+
+.eda-mega-menu-link:hover,
+.eda-mega-menu-link:focus-visible,
+.eda-mega-menu-link.is-active {
+	background: #eef5fb;
+	outline: none;
+}
+
+.eda-mega-menu-feature {
+	padding: 0.9rem;
+	border-radius: 0.75rem;
+	background: linear-gradient(160deg, #eef7ff 0%, #e6f3ea 100%);
+	border: 1px solid #d8e7d9;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.eda-mega-menu-feature-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	align-self: flex-start;
+	margin-top: 0.5rem;
+	padding: 0.45rem 0.65rem;
+	border-radius: 0.45rem;
+	background: #dff0d8;
+	color: #0b315a;
+	font-weight: 700;
+	font-size: 0.82rem;
+	text-decoration: none;
+}
+
+.eda-mega-menu-feature-link:hover,
+.eda-mega-menu-feature-link:focus-visible {
+	background: #d4eacb;
+	outline: none;
+}
+
+.eda-mega-menu-feature-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 0.95rem;
+	height: 0.95rem;
+}
+
+@media (max-width: 1180px) {
+	.eda-site-menu > ul > li > a,
+	.eda-site-menu .eda-nav-trigger {
+		width: 4.9rem;
+		min-height: 4.75rem;
+		font-size: 0.57rem;
+	}
+}
+
+@media (max-width: 1024px) {
+	.eda-header .header-top {
+		padding-top: 0.75rem;
+	}
+
+	.eda-main-inner {
+		flex-wrap: wrap;
+		align-items: center;
+		padding-bottom: 0.5rem;
+	}
+
+	.eda-menu-toggler {
+		display: flex;
+	}
+
+	.eda-site-menu {
+		display: none;
+	}
+
+	.eda-logo-wrapper {
+		width: calc(100% - 5rem);
+		margin-bottom: 0;
+	}
+
+	.eda-brand-link {
+		width: 100%;
+	}
+
+	.eda-site-logo .eda-title-main {
+		font-size: 0.9rem;
+		white-space: normal;
+	}
+
+	.eda-site-logo .eda-title-sub {
+		font-size: 0.74rem;
+	}
+
+	.eda-site-menu.open {
+		display: block;
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		left: 0;
+		right: 0;
+		max-height: min(72vh, 36rem);
+		overflow-y: auto;
+		background: var(--magnolia-primary);
+		border-radius: 0.6rem;
+		padding: 0.85rem;
+		box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+	}
+
+	.eda-site-menu.open > ul {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.eda-site-menu.open > ul > li > a,
+	.eda-site-menu.open .eda-nav-trigger {
+		width: 100%;
+		min-height: 0;
+		border-radius: 0.55rem;
+		border-width: 2px;
+		font-size: 0.84rem;
+		justify-content: flex-start;
+		text-align: left;
+		padding: 0.62rem 0.9rem;
+	}
+
+	.eda-site-menu.open .eda-submenu {
+		position: static;
+		border: none;
+		border-radius: 0.55rem;
+		box-shadow: none;
+		min-width: 0;
+		background: rgba(0, 0, 0, 0.15) !important;
+		margin-top: 0;
+		white-space: normal;
+	}
+
+	.eda-site-menu.open .eda-submenu li a {
+		font-size: 0.8rem;
+		text-align: left;
+		color: #fff !important;
+		padding: 0.48rem 1rem;
+	}
+
+	.eda-site-menu.open > ul > li:hover > .eda-submenu {
+		display: none;
+	}
+
+	.eda-site-menu.open > ul > li.submenu-open > .eda-submenu,
+	.eda-site-menu.open > ul > li:focus-within > .eda-submenu {
+		display: block;
+	}
+
+	.eda-mega-menu {
+		display: none !important;
+	}
+}
+
+@media (max-width: 560px) {
+	.eda-logo-wrapper {
+		width: 100%;
+		padding: 0.45rem 0.55rem;
+	}
+
+	.eda-brand-link {
+		gap: 0.35rem;
+	}
+
+	.eda-logo-image {
+		width: 2.25rem;
+		height: 2.25rem;
+	}
+
+	.eda-site-logo .eda-title-main {
+		font-size: 0.79rem;
+	}
+
+	.eda-site-logo .eda-title-sub {
+		font-size: 0.68rem;
+	}
+
+	.eda-site-menu.open {
+		top: calc(100% + 0.35rem);
+	}
+}
+
+.eda-header .header-top {
+	background: #fff;
+	border-bottom: 1px solid #e4e8ee;
+	padding-bottom: 0;
+}
+
+.eda-header .header-top .container,
+.eda-header .header-top .inner {
+	background: #fff;
+}
+
+.eda-main-inner {
+	gap: 1.15rem;
+	padding-top: 0.12rem;
+	padding-bottom: 0.55rem;
+}
+
+.eda-site-menu {
+	margin-left: auto;
+	background: #fff;
+	border-left: 1px solid #edf1f5;
+	padding-left: 0.75rem;
+}
+
+.eda-site-menu > ul {
+	align-items: stretch;
+}
+
+.eda-site-menu > ul > li > a,
+.eda-site-menu .eda-nav-trigger {
+	width: auto;
+	height: auto;
+	aspect-ratio: auto;
+	min-width: 0;
+	padding: 0.9rem 0.95rem 0.85rem;
+	border: 0;
+	border-radius: 0;
+	background: #fff;
+	color: #173f68;
+	font-family: var(--magnolia-font-sans);
+	font-size: 0.9rem;
+	font-weight: 600;
+	letter-spacing: 0;
+	text-transform: none;
+	line-height: 1.15;
+	box-shadow: none;
+	transition: color 0.15s ease, background-color 0.15s ease;
+	cursor: pointer;
+}
+
+.eda-site-menu > ul > li:nth-child(odd) > a,
+.eda-site-menu > ul > li:nth-child(even) > a,
+.eda-site-menu > ul > li:nth-child(odd) > .eda-nav-trigger,
+.eda-site-menu > ul > li:nth-child(even) > .eda-nav-trigger {
+	background: #fff;
+	color: #173f68;
+}
+
+.eda-site-menu > ul > li > a:hover,
+.eda-site-menu > ul > li > a:focus-visible,
+.eda-site-menu > ul > li:focus-within > a,
+.eda-site-menu > ul > li > .eda-nav-trigger:hover,
+.eda-site-menu > ul > li > .eda-nav-trigger:focus-visible,
+.eda-site-menu > ul > li:focus-within > .eda-nav-trigger {
+	background: #f4f8fc;
+	color: #0a4f90;
+	outline: none;
+}
+
+.eda-site-menu > ul > li > a span,
+.eda-site-menu > ul > li > .eda-nav-trigger span {
+	display: inline;
+}
+
+.eda-site-menu .submenu {
+	top: 100%;
+	min-width: 12rem;
+	border: 1px solid #e1e7ef;
+	border-top: 0;
+	border-radius: 0 0 0.9rem 0.9rem;
+	background: #fff;
+	box-shadow: 0 12px 28px rgba(15, 30, 45, 0.08);
+	padding: 0.35rem 0;
+	z-index: 1200;
+}
+
+.eda-site-menu > ul > li:nth-child(odd) .submenu,
+.eda-site-menu > ul > li:nth-child(even) .submenu {
+	background: #fff;
+}
+
+.eda-site-menu .submenu li a {
+	padding: 0.55rem 1rem;
+	font-size: 0.82rem;
+	font-weight: 600;
+	text-transform: none;
+	text-align: left;
+	color: #173f68 !important;
+	white-space: nowrap;
+}
+
+.eda-site-menu .submenu li + li {
+	border-top: 1px solid #edf1f5 !important;
+}
+
+.eda-site-menu .submenu li a:hover,
+.eda-site-menu .submenu li a:focus-visible {
+	background: #f4f8fc;
+	opacity: 1;
+	outline: none;
+}
+
+.eda-site-menu .eda-desktop-menu-list > li.has-mega-control {
+	display: inline-flex;
+	align-items: stretch;
+}
+
+.eda-nav-dropdown-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.25rem;
+	min-height: 2.25rem;
+	padding: 0;
+	border: 1px solid #edf1f5;
+	background: #fff;
+	color: #173f68;
+	cursor: pointer;
+	font-size: 0.72rem;
+	font-weight: 700;
+	border-radius: 999px;
+	transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.eda-nav-dropdown-toggle:hover,
+.eda-nav-dropdown-toggle:focus-visible,
+.eda-nav-dropdown-toggle.is-open {
+	background: #f4f8fc;
+	border-color: #d7e5f1;
+	color: #0a4f90;
+	box-shadow: 0 0 0 2px rgba(10, 79, 144, 0.08);
+	outline: none;
+}
+
+.eda-nav-dropdown-toggle span,
+.utility-submenu-toggle span {
+	display: inline-block;
+	transition: transform 0.15s ease;
+}
+
+.eda-nav-dropdown-toggle.is-open span,
+.utility-submenu-toggle[aria-expanded='true'] span {
+	transform: rotate(180deg);
+}
+
+.eda-mega-menu {
+	display: none;
+	position: absolute;
+	left: 0;
+	right: 0;
+	width: 100%;
+	top: calc(100% + 0.2rem);
+	z-index: 1400;
+}
+
+.eda-mega-menu.is-open {
+	display: block;
+}
+
+.eda-mega-menu-inner {
+	display: block;
+	width: 100%;
+	min-width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+	overflow-x: hidden;
+	background: #ffffff;
+	border: 1px solid #d8e5f1;
+	border-radius: 0.75rem;
+	box-shadow: 0 14px 28px rgba(8, 37, 71, 0.16);
+	padding: 1rem;
+}
+
+.eda-mega-menu-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+	align-items: start;
+	gap: 0.75rem;
+}
+
+.eda-mega-menu-column {
+	width: auto;
+	max-width: none;
+	padding: 0.75rem;
+	border-radius: 0.6rem;
+	border: 1px solid #eef3f8;
+	background: #fdfefe;
+}
+
+.eda-mega-menu-column,
+.eda-mega-menu-description,
+.eda-mega-menu-link {
+	overflow-wrap: anywhere;
+}
+
+@media (max-width: 1240px) {
+	.eda-mega-menu-grid {
+		grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+		gap: 0.6rem;
+	}
+
+	.eda-mega-menu-inner {
+		padding: 0.85rem;
+	}
+}
+
+@media (max-width: 1120px) {
+	.eda-mega-menu-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.eda-mega-menu-column.is-focused {
+	border-color: #c9dff3;
+	background: #f6fbff;
+}
+
+.eda-mega-menu-heading {
+	margin: 0;
+	font-size: 0.95rem;
+	line-height: 1.2;
+}
+
+.eda-mega-menu-heading a {
+	color: #173f68;
+	text-decoration: none;
+}
+
+.eda-mega-menu-heading a:hover,
+.eda-mega-menu-heading a:focus-visible {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	outline: none;
+}
+
+.eda-mega-menu-description {
+	margin: 0.45rem 0 0.65rem;
+	font-size: 0.78rem;
+	line-height: 1.35;
+	color: #466785;
+}
+
+.eda-mega-menu-links {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.3rem;
+}
+
+.eda-mega-menu-link {
+	display: block;
+	padding: 0.34rem 0.38rem;
+	border-radius: 0.35rem;
+	font-size: 0.82rem;
+	font-weight: 600;
+	text-decoration: none;
+	color: #173f68;
+}
+
+.eda-mega-menu-link:hover,
+.eda-mega-menu-link:focus-visible,
+.eda-mega-menu-link.is-active {
+	background: #eef5fb;
+	outline: none;
+}
+
+.eda-mega-menu-feature {
+	padding: 0.9rem;
+	border-radius: 0.75rem;
+	background: linear-gradient(160deg, #eef7ff 0%, #e6f3ea 100%);
+	border: 1px solid #d8e7d9;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.eda-mega-menu-feature-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	align-self: flex-start;
+	margin-top: 0.5rem;
+	padding: 0.45rem 0.65rem;
+	border-radius: 0.45rem;
+	background: #dff0d8;
+	color: #0b315a;
+	font-weight: 700;
+	font-size: 0.82rem;
+	text-decoration: none;
+}
+
+.eda-mega-menu-feature-link:hover,
+.eda-mega-menu-feature-link:focus-visible {
+	background: #d4eacb;
+	outline: none;
+}
+
+.eda-mega-menu-feature-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 0.95rem;
+	height: 0.95rem;
+}
+
+.eda-mobile-menu-list {
+	display: none;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	gap: 0.3rem;
+}
+
+.eda-mobile-item-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 0.35rem;
+	align-items: center;
+}
+
+.eda-mobile-main-link {
+	display: block;
+	text-decoration: none;
+	padding: 0.68rem 0.86rem;
+	border-radius: 0.45rem;
+	color: #173f68;
+	font-size: 0.92rem;
+	font-weight: 600;
+	border: 1px solid #edf1f5;
+	min-height: 44px;
+	line-height: 1.2;
+}
+
+.eda-mobile-main-link:hover,
+.eda-mobile-main-link:focus-visible,
+.eda-mobile-main-link.is-active {
+	background: #f4f8fc;
+	color: #0a4f90;
+	outline: none;
+}
+
+.eda-mobile-section-toggle {
+	min-width: 44px;
+	min-height: 44px;
+	padding: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #edf1f5;
+	border-radius: 0.55rem;
+	background: #fff;
+	color: #173f68;
+	font-size: 1rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.eda-mobile-section-toggle:hover,
+.eda-mobile-section-toggle:focus-visible,
+.eda-mobile-section-toggle.is-open {
+	background: #f4f8fc;
+	border-color: #d7e5f1;
+	color: #0a4f90;
+	box-shadow: 0 0 0 2px rgba(10, 79, 144, 0.08);
+	outline: none;
+}
+
+.eda-mobile-submenu {
+	display: none;
+	list-style: none;
+	margin: 0.35rem 0 0;
+	padding: 0.35rem;
+	border: 1px solid #edf1f5;
+	border-radius: 0.45rem;
+	background: #fff;
+}
+
+.eda-mobile-submenu.is-open {
+	display: grid;
+	gap: 0.2rem;
+}
+
+.eda-mobile-mega-section {
+	display: grid;
+	gap: 0.25rem;
+	padding: 0.35rem 0.25rem 0.55rem;
+	border-bottom: 1px solid #edf1f5;
+}
+
+.eda-mobile-mega-section:last-child {
+	border-bottom: 0;
+}
+
+.eda-mobile-mega-section-heading {
+	display: block;
+	font-size: 0.82rem;
+	font-weight: 700;
+	text-decoration: none;
+	color: #173f68;
+	padding: 0.2rem 0.45rem;
+}
+
+.eda-mobile-mega-section-heading:hover,
+.eda-mobile-mega-section-heading:focus-visible,
+.eda-mobile-mega-section-heading.is-active {
+	background: #f4f8fc;
+	color: #0a4f90;
+	outline: none;
+}
+
+.eda-mobile-mega-section-description {
+	margin: 0;
+	font-size: 0.76rem;
+	line-height: 1.35;
+	color: #466785;
+	padding: 0 0.45rem;
+}
+
+.eda-mobile-mega-section-links {
+	list-style: none;
+	margin: 0;
+	padding: 0 0 0 0.25rem;
+	display: grid;
+	gap: 0.18rem;
+}
+
+.eda-mobile-mega-section-links a {
+	display: block;
+	padding: 0.42rem 0.55rem;
+	border-radius: 0.35rem;
+	text-decoration: none;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #173f68;
+	min-height: 36px;
+	line-height: 1.2;
+}
+
+.eda-mobile-mega-section-links a:hover,
+.eda-mobile-mega-section-links a:focus-visible,
+.eda-mobile-mega-section-links a.is-active {
+	background: #f4f8fc;
+	color: #0a4f90;
+	outline: none;
+}
+
+.eda-mobile-submenu a {
+	display: block;
+	padding: 0.48rem 0.74rem;
+	border-radius: 0.35rem;
+	text-decoration: none;
+	font-size: 0.82rem;
+	font-weight: 600;
+	color: #173f68;
+	min-height: 40px;
+	line-height: 1.2;
+}
+
+.eda-mobile-submenu a:hover,
+.eda-mobile-submenu a:focus-visible,
+.eda-mobile-submenu a.is-active {
+	background: #f4f8fc;
+	color: #0a4f90;
+	outline: none;
+}
+
+
+.eda-site-menu .eda-menu-list > li > a.is-active,
+.eda-site-menu .eda-menu-list > li > a.active,
+.eda-site-menu .eda-menu-list > li.is-active > .eda-nav-trigger,
+.eda-site-menu .eda-menu-list > li > .eda-nav-trigger.is-active {
+	background: #f4f8fc;
+	color: #0a4f90;
+	text-decoration: none;
+	box-shadow: none;
+}
+
+.eda-site-menu.open {
+	background: #fff;
+	border: 1px solid #e4e8ee;
+	box-shadow: 0 10px 24px rgba(15, 30, 45, 0.08);
+	padding: 0.75rem 0.8rem;
+}
+
+.eda-site-menu.open > ul > li > a,
+.eda-site-menu.open .eda-nav-trigger {
+	background: #fff;
+	color: #173f68;
+	padding: 0.7rem 0.9rem;
+	border-radius: 0.45rem;
+	border: 1px solid #edf1f5;
+	font-size: 0.92rem;
+	font-weight: 600;
+}
+
+.eda-site-menu.open .eda-submenu {
+	background: #fff !important;
+	border: 1px solid #edf1f5;
+	border-radius: 0.45rem;
+	box-shadow: none;
+	margin-top: 0.35rem;
+}
+
+.eda-site-menu.open .eda-submenu li a {
+	color: #173f68 !important;
+	padding: 0.48rem 0.9rem;
+	font-size: 0.8rem;
+}
+
+.eda-site-menu.open .eda-submenu li + li {
+	border-top-color: #edf1f5 !important;
+}
+
+
+@media (max-width: 1024px) {
+	.eda-site-menu {
+		padding-left: 0;
+		border-left: 0;
+	}
+
+	.eda-logo-wrapper {
+		width: calc(100% - 5rem);
+	}
+
+	.eda-site-menu.open > ul {
+		gap: 0.2rem;
+	}
+
+	.eda-site-menu.open > ul > li > a,
+	.eda-site-menu.open .eda-nav-trigger {
+		padding: 0.6rem 0.85rem;
+		border: 1px solid #edf1f5;
+	}
+}
+
+@media (max-width: 560px) {
+	.eda-main-inner {
+		gap: 0.65rem;
+	}
+
+	.eda-logo-wrapper {
+		width: 100%;
+	}
+
+	.eda-site-menu.open {
+		padding: 0.65rem;
+	}
+}
+
+.municipal-icon {
+	width: 1em;
+	height: 1em;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.utility-icon .municipal-icon {
+	width: 0.95rem;
+	height: 0.95rem;
+}
+
+.utility-social-link .municipal-icon {
+	width: 1rem;
+	height: 1rem;
+}
+
+.municipal-utility-bar .container.municipal-utility-inner {
+	max-width: var(--magnolia-container-max);
+	width: 100%;
+	padding-left: var(--magnolia-gutter);
+	padding-right: var(--magnolia-gutter);
+}
+
+.municipal-utility-bar {
+	background: #dff0d8;
+	border-bottom: 1px solid #c8dfbb;
+}
+
+.municipal-utility-bar,
+.municipal-utility-contact,
+.municipal-utility-contact a,
+.municipal-utility-actions,
+.utility-language-label,
+.utility-language-select {
+	font-size: 0.86rem;
+}
+
+.utility-icon {
+	width: 1.25rem;
+	height: 1.25rem;
+}
+
+.utility-social-link {
+	width: 1.68rem;
+	height: 1.68rem;
+}
+
+.municipal-utility-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	min-height: 2.2rem;
+}
+
+.municipal-utility-contact {
+	display: inline-flex;
+	align-items: center;
+	gap: 1rem;
+	margin: 0;
+	white-space: nowrap;
+	flex-wrap: nowrap;
+}
+
+.utility-top-links {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin-left: 0.35rem;
+	padding-left: 0.6rem;
+	border-left: 1px solid rgba(11, 49, 90, 0.2);
+}
+
+.utility-top-link {
+	color: #0b315a;
+	text-decoration: none;
+	font-weight: 600;
+	line-height: 1;
+}
+
+.utility-top-link-group {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.2rem;
+}
+
+.utility-top-link-group::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 100%;
+	height: 0.4rem;
+}
+
+.utility-submenu-toggle {
+	min-width: 1.5rem;
+	height: 1.5rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	background: transparent;
+	color: #0b315a;
+	font-size: 0.66rem;
+	font-weight: 700;
+	padding: 0;
+	cursor: pointer;
+	border-radius: 999px;
+}
+
+.utility-submenu-toggle:hover,
+.utility-submenu-toggle:focus-visible {
+	background: rgba(11, 49, 90, 0.1);
+	outline: none;
+}
+
+.utility-top-submenu {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	min-width: 10.75rem;
+	background: #ffffff;
+	border: 1px solid #d8e5f1;
+	border-radius: 0.5rem;
+	box-shadow: 0 8px 20px rgba(8, 37, 71, 0.14);
+	padding: 0.35rem;
+	z-index: 1300;
+	list-style: none;
+}
+
+.utility-top-submenu.is-open {
+	display: block;
+}
+
+.utility-top-submenu-link {
+	display: block;
+	padding: 0.38rem 0.55rem;
+	border-radius: 0.35rem;
+	color: #0b315a;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.82rem;
+	line-height: 1.2;
+}
+
+.utility-top-submenu-link:hover,
+.utility-top-submenu-link:focus-visible {
+	background: #eef5fb;
+	outline: none;
+}
+
+.utility-top-link:hover,
+.utility-top-link:focus-visible {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.municipal-utility-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.42rem;
+	margin-left: auto;
+	white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+	.municipal-utility-inner {
+		flex-wrap: wrap;
+		justify-content: center;
+		padding-top: 0.35rem;
+		padding-bottom: 0.35rem;
+	}
+
+	.municipal-utility-contact,
+	.municipal-utility-actions {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.utility-top-links {
+		border-left: 0;
+		padding-left: 0;
+		margin-left: 0;
+	}
+
+	.utility-top-submenu {
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+@media (min-width: 1025px) {
+	.eda-site-menu {
+		position: relative;
+	}
+
+	.eda-mobile-menu-list {
+		display: none !important;
+	}
+
+	.eda-site-menu.open {
+		display: block;
+		border: 0;
+		box-shadow: none;
+		padding: 0;
+	}
+}
+
+@media (max-width: 1024px) {
+	.eda-desktop-menu-list,
+	.eda-mega-menu {
+		display: none !important;
+	}
+
+	.eda-site-menu.open {
+		display: block;
+	}
+
+	.eda-mobile-menu-list {
+		display: grid;
+	}
+}
+
+.eda-header .logo-wrapper.eda-logo-wrapper,
+.eda-header .eda-logo-wrapper {
+	background: transparent;
+	box-shadow: none;
+	border-radius: 0;
+	padding: 0;
+	margin-bottom: -1.7rem;
+	position: relative;
+	left: -3.75rem;
+	top: 0;
+}
+
+.eda-header .eda-logo-image {
+	width: 8rem;
+	height: 8rem;
+	object-fit: contain;
+}
+
+@media (max-width: 680px) {
+	.eda-header .logo-wrapper.eda-logo-wrapper,
+	.eda-header .eda-logo-wrapper {
+		left: -1.5rem;
+		top: 0;
+	}
+
+	.eda-header .eda-logo-image {
+		width: 6rem;
+		height: 6rem;
+	}
+}
+
+.eda-header .eda-brand-link {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 0.75rem;
+	flex-wrap: nowrap;
+}
+
+.eda-header .eda-title-wrap {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	min-width: 0;
+}
+
+
+.eda-header .eda-title-main {
+	font-family: var(--magnolia-font-serif);
+	color: #c9a227;
+}
+
+.eda-header .eda-title-sub {
+	font-family: var(--magnolia-font-serif);
+	color: var(--magnolia-primary);
+	font-weight: 700;
+}
+
+.eda-header .eda-site-logo {
+	display: block;
+}
+
+.contact-section .eda-footer-brand {
+	display: inline-flex;
+	align-items: flex-start;
+	gap: 1rem;
+	margin-bottom: 0.65rem;
+	position: relative;
+	left: -3.75rem;
+}
+
+.contact-section .inner.eda-footer-columns {
+	display: grid;
+	grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.95fr);
+	gap: 2rem;
+	align-items: start;
+}
+
+.contact-section .eda-footer-column-visit,
+.contact-section .eda-footer-column-secondary,
+.contact-section .eda-footer-column-hours {
+	padding-left: 1.2rem;
+}
+
+.contact-section .eda-footer-logo {
+	width: 8rem;
+	height: 8rem;
+	object-fit: contain;
+	flex-shrink: 0;
+	background: #ffffff;
+	padding: 0.18rem;
+	border-radius: 999px;
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.contact-section .eda-footer-brand-info {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.25rem;
+	max-width: 34rem;
+}
+
+.contact-section .eda-footer-kicker,
+.contact-section .eda-footer-city,
+.contact-section .eda-footer-summary,
+.contact-section .eda-footer-detail {
+	margin: 0;
+}
+
+.contact-section .eda-footer-kicker {
+	font-family: var(--magnolia-font-serif);
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #c6d9ec;
+}
+
+.contact-section .eda-footer-kicker-welcome {
+	color: #c9a227;
+}
+
+.contact-section .eda-footer-kicker-visit {
+	margin-top: 0.5rem;
+}
+
+.contact-section .eda-footer-city {
+	font-family: var(--magnolia-font-serif);
+	font-size: 1.38rem;
+	font-weight: 700;
+	line-height: 1.1;
+	color: #f2f6fa;
+}
+
+.contact-section .eda-footer-summary {
+	font-size: 0.86rem;
+	line-height: 1.45;
+	color: #d5e3f1;
+	max-width: 31rem;
+}
+
+.contact-section .eda-footer-detail {
+	display: flex;
+	align-items: center;
+	gap: 0.45rem;
+	font-size: 0.86rem;
+	line-height: 1.35;
+	color: #f2f6fa;
+}
+
+.contact-section .eda-footer-column-visit .eda-footer-detail:first-of-type {
+	margin-top: 0.45rem;
+}
+
+.contact-section .eda-footer-detail-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1rem;
+	height: 1rem;
+	flex-shrink: 0;
+}
+
+.contact-section .eda-footer-detail a {
+	color: #cde8ff;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.contact-section .eda-footer-section-title {
+	margin: 0;
+	font-size: 1rem;
+	font-weight: 700;
+	line-height: 1.2;
+	color: #f2f6fa;
+}
+
+.contact-section .eda-footer-services-list {
+	list-style: none;
+	padding: 0;
+	margin: 0.7rem 0 0;
+	display: grid;
+	gap: 0.45rem;
+}
+
+.contact-section .eda-footer-services-list li {
+	margin: 0;
+}
+
+.contact-section .eda-footer-services-list a {
+	font-size: 0.9rem;
+	line-height: 1.25;
+	color: #cde8ff;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.contact-section .eda-footer-hours-line {
+	margin: 0.7rem 0 0;
+	font-size: 0.9rem;
+	line-height: 1.35;
+	color: #f2f6fa;
+}
+
+.contact-section .eda-footer-hours-line + .eda-footer-hours-line {
+	margin-top: 0.4rem;
+}
+
+@media (max-width: 900px) {
+	.contact-section .inner.eda-footer-columns {
+		grid-template-columns: 1fr;
+		gap: 1.3rem;
+	}
+
+	.contact-section .eda-footer-brand {
+		flex-direction: column;
+		gap: 0.7rem;
+		left: -1.5rem;
+	}
+
+	.contact-section .eda-footer-column-visit,
+	.contact-section .eda-footer-column-secondary,
+	.contact-section .eda-footer-column-hours {
+		padding-left: 0;
+		border-left: 0;
+	}
+
+	.contact-section .eda-footer-logo {
+		width: 6rem;
+		height: 6rem;
+	}
+}
+
+.site-footer {
+	text-align: left;
+}
+
+.site-footer .container {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.site-footer .copyright {
+	margin: 0;
+}
+
+.site-footer .powered {
+	margin: 0 0 0 auto;
+	text-align: right;
+}
+
+@media (max-width: 700px) {
+	.site-footer .container {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.45rem;
+	}
+
+	.site-footer .powered {
+		margin-left: 0;
+		text-align: left;
+	}
+}
+
+/* Ecodev public marquee */
+.site-marquee {
+	position: relative;
+	z-index: 1;
+	white-space: nowrap;
+	padding: 0.45rem 0;
+	font-size: 0.95rem;
+	font-weight: 500;
+	border-bottom: 1px solid rgba(23, 63, 104, 0.2);
+	cursor: default;
+	user-select: none;
+	overflow: hidden;
+}
+
+.site-marquee-window {
+	--site-marquee-left-cutoff: clamp(14rem, 24vw, 21rem);
+	--site-marquee-right-cutoff: clamp(8rem, 16vw, 12rem);
+	--site-marquee-fade: 48px;
+	overflow: hidden;
+	margin-left: var(--site-marquee-left-cutoff);
+	margin-right: var(--site-marquee-right-cutoff);
+	mask-image: linear-gradient(
+		to right,
+		transparent 0,
+		black var(--site-marquee-fade),
+		black calc(100% - var(--site-marquee-fade)),
+		transparent 100%
+	);
+	-webkit-mask-image: linear-gradient(
+		to right,
+		transparent 0,
+		black var(--site-marquee-fade),
+		black calc(100% - var(--site-marquee-fade)),
+		transparent 100%
+	);
+}
+
+.site-marquee-track {
+	display: inline-block;
+	padding-left: 100%;
+	animation-name: site-marquee-scroll;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	will-change: transform;
+}
+
+@keyframes site-marquee-scroll {
+	from { transform: translateX(0); }
+	to   { transform: translateX(-100%); }
+}
+
+.site-marquee-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin-right: 2.5rem;
+}
+
+.site-marquee-dot {
+	opacity: 0.75;
+	font-size: 1.2rem;
+	line-height: 1;
+}
+
+.site-marquee-text {
+	letter-spacing: 0.02em;
+}
+
+.site-marquee-rich p,
+.site-marquee-rich ul,
+.site-marquee-rich ol {
+	margin: 0;
+	padding: 0;
+}
+
+.site-marquee-rich,
+.site-marquee-rich * {
+	color: inherit !important;
+}
+
+.site-marquee-rich ul,
+.site-marquee-rich ol {
+	padding-left: 1.05rem;
+}
+
+.site-marquee-rich li {
+	line-height: 1.25;
+}
+
+.site-marquee-link {
+	text-decoration: none;
+}
+
+.site-marquee-link:hover .site-marquee-text {
+	text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site-marquee-track { animation: none !important; }
+	.site-marquee { white-space: normal; }
+	.site-marquee-item { display: inline-block; margin: 0 1rem; }
+}
+
+@media (max-width: 1024px) {
+	.site-marquee-window {
+		--site-marquee-left-cutoff: clamp(1rem, 4vw, 2rem);
+		--site-marquee-right-cutoff: clamp(1rem, 4vw, 2rem);
+		--site-marquee-fade: 28px;
+	}
+}

@@ -105,6 +105,9 @@ function EventModal({ ev, onClose }) {
     <div className="calmod-backdrop" onClick={handleBackdrop} role="dialog" aria-modal="true">
       <div className="calmod">
         <div className="calmod-bar" style={{ background: color }} />
+        <div className="calmod-hero">
+          <img src={calendarBanner} alt="Calendar details header" className="calmod-hero-image" />
+        </div>
         <div className="calmod-header">
           <div className="calmod-header-text">
             <span className="calmod-cat" style={{ color }}>{ev.category}</span>

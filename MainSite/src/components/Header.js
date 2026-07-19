@@ -117,7 +117,13 @@ export default function Header() {
                 <img src={logoImage} alt="" className="municipal-brand-logo" />
               </span>
               <span className="municipal-brand-text">
-                <small>{text.welcome}</small>
+                <small>
+                  {isSpanish ? text.welcome : (
+                    <>
+                      <span className="municipal-welcome-gold">Welcome to</span>
+                    </>
+                  )}
+                </small>
                 <strong>{text.cityTitle}</strong>
               </span>
             </Link>
